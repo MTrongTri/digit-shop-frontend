@@ -7,7 +7,7 @@ import LoginPage from "@/pages/LoginPage/LoginPage";
 import NotFoundPage from "@/pages/NotFoundPage/NotFoundPage";
 import ProductDetailPage from "@/pages/ProductDetailPage/ProductDetailPage";
 import CartPage from "@/pages/CartPage/CartPage";
-import PrivateRoute from "@/components/Routes/PrivateRoute";
+import PrivateRoute from "@/components/PrivateRoute";
 
 function App() {
   return (

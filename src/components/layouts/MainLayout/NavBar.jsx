@@ -46,7 +46,7 @@ const NavItems = [
 
 function NavBar() {
   return (
-    <div className="mt-6 pb-2">
+    <div className="mt-6 hidden pb-2 md:block">
       <ul className="flex items-center justify-center gap-8">
         {NavItems.map((item, index) => (
           <li key={index}>
