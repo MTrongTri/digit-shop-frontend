@@ -16,7 +16,7 @@ function Search() {
         />
         <button
           type="submit"
-          className="absolute right-4 top-1/2 -translate-y-1/2 hover:text-primary"
+          className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-primary"
         >
           <IoIosSearch className="size-6" />
         </button>

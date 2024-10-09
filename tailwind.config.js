@@ -14,5 +14,18 @@ export default {
       },
     },
   },
-  plugins: [],
+  plugins: [
+    // eslint-disable-next-line no-undef
+    require("daisyui"),
+  ],
+  daisyui: {
+    themes: false,
+    darkTheme: "light",
+    base: true,
+    styled: true,
+    utils: true,
+    prefix: "",
+    logs: true,
+    themeRoot: ":root",
+  },
 };

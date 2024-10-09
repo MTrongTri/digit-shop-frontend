@@ -1,5 +1,11 @@
+import Container from "@/components/Container";
+
 function CartPage() {
-  return <div>Cart page</div>;
+  return (
+    <Container>
+      <div>Cart page</div>
+    </Container>
+  );
 }
 
 export default CartPage;

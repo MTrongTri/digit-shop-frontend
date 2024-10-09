@@ -1,9 +1,14 @@
-import { Navigate } from "react-router-dom";
+import { Navigate, useLocation } from "react-router-dom";
 
 // eslint-disable-next-line react/prop-types
 function PrivateRoute({ children }) {
-  const isAu = true;
-  return isAu ? children : <Navigate to={"/login"} />;
+  const location = useLocation();
+
+  return localStorage.getItem("userInfo") ? (
+    children
+  ) : (
+    <Navigate to={"/login"} state={{ from: location }} replace />
+  );
 }
 
 export default PrivateRoute;
