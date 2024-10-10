@@ -12,7 +12,7 @@ import { Toaster } from "react-hot-toast";
 
 function App() {
   return (
-    <>
+    <div className="bg-[#F5F5FA]">
       <Toaster />
       <BrowserRouter>
         <Routes>
@@ -36,7 +36,7 @@ function App() {
           </Route>
         </Routes>
       </BrowserRouter>
-    </>
+    </div>
   );
 }
 
