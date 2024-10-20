@@ -48,7 +48,7 @@ function RegisterPage() {
     <div className="h-screen">
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="mx-auto mt-10 w-[400px] rounded-sm px-5 py-8 pb-20 shadow-[0_0px_8px_rgb(0,0,0,0.2)]"
+        className="mx-auto mt-10 w-[400px] rounded-sm bg-white px-5 py-8 pb-20 shadow-[0_0px_8px_rgb(0,0,0,0.2)]"
       >
         <h2 className="text-center text-3xl font-bold">Đăng nhập</h2>
         <div className="mt-5 flex flex-col gap-3">
