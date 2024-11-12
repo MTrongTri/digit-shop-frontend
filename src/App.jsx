@@ -9,6 +9,10 @@ import CartPage from "@/pages/CartPage/CartPage";
 import PrivateRoute from "@/components/PrivateRoute";
 import AuthLayout from "@/components/layouts/AuthLayout/AuthLayout";
 import { Toaster } from "react-hot-toast";
+import AdminLayout from "@/components/layouts/AdminLayout/AdminLayout";
+import AdminDashboard from "@/pages/Admin/AdminDashboard";
+import CategoriesPage from "@/pages/Admin/Categories/CategoriesPage";
+import CreateCategoryPage from "@/pages/Admin/Categories/CreateCategoryPage";
 
 function App() {
   return (
@@ -33,6 +37,15 @@ function App() {
               }
             ></Route>
             <Route path="*" element={<NotFoundPage />}></Route>
+          </Route>
+
+          <Route path="/admin" element={<AdminLayout />}>
+            <Route path="dashboard" element={<AdminDashboard />}></Route>
+            <Route path="categories" element={<CategoriesPage />}></Route>
+            <Route
+              path="categories/create"
+              element={<CreateCategoryPage />}
+            ></Route>
           </Route>
         </Routes>
       </BrowserRouter>
