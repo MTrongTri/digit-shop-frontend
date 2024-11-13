@@ -1,3 +1,5 @@
+import TableSkeleton from "@/components/Skeleton/TableSkeleton";
+
 function AdminDashboard() {
   return (
     <div className="mt-10">
@@ -5,6 +7,7 @@ function AdminDashboard() {
       <span className="text-sm text-gray-400">
         Chào mừng Admin đến với Admin dashboard
       </span>
+      <TableSkeleton />
     </div>
   );
 }

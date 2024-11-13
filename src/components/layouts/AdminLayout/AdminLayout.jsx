@@ -9,7 +9,9 @@ function AdminLayout() {
         <Sidebar />
         <div className="flex-1 px-8 py-6">
           <Header />
-          <Outlet />
+          <div className="mt-10">
+            <Outlet />
+          </div>
         </div>
       </div>
     </>
