@@ -1,32 +1,63 @@
+/* eslint-disable react/prop-types */
 import clsx from "clsx";
 import { useState } from "react";
+import { Controller } from "react-hook-form";
 
-// eslint-disable-next-line react/prop-types
-function FloatingLabelInput({ label, id, type, ...prop }) {
-  const [value, setValue] = useState("");
+const FloatingLabelInput = ({
+  label,
+  id,
+  name,
+  type = "text",
+  control,
+  rules,
+  defaultValue = "",
+  className,
+  ...props
+}) => {
+  const [hasValue, setHasValue] = useState(false);
+
   return (
     <div className="group relative">
-      <label
-        htmlFor={id}
-        className={clsx(
-          "absolute left-4 -translate-y-1/2 bg-white px-2 text-sm text-gray-500 duration-300 group-focus-within:left-2 group-focus-within:top-0 group-focus-within:text-primary",
-          {
-            "top-1/2": value === "",
-            "left-2": value !== "",
-          },
-        )}
-      >
-        {label}
-      </label>
-      <input
-        type={type}
-        id={id}
-        {...prop}
-        className="w-full rounded-md border border-gray-400 px-4 py-3 text-gray-500 outline-none focus:border-primary"
-        onChange={(e) => setValue(e.target.value)}
-      />
+      <Controller
+        name={name}
+        control={control}
+        rules={rules}
+        defaultValue={defaultValue}
+        render={({ field }) => {
+          return (
+            <>
+              <label
+                htmlFor={id}
+                className={clsx(
+                  "absolute -translate-y-1/2 bg-white px-2 text-sm text-gray-500 duration-300 group-focus-within:left-2 group-focus-within:top-0 group-focus-within:text-xs group-focus-within:text-primary",
+                  {
+                    "left-4 top-1/2 text-sm": !hasValue,
+                    "left-2 text-xs": hasValue,
+                  },
+                )}
+              >
+                {label}
+              </label>
+              <input
+                type={type}
+                id={id}
+                {...field}
+                {...props}
+                onChange={(e) => {
+                  setHasValue(!!e.target.value);
+                  field.onChange(e.target.value);
+                }}
+                className={clsx(
+                  "w-full rounded-md border border-gray-400 px-4 py-3 text-gray-500 outline-none focus:border-primary",
+                  className,
+                )}
+              />
+            </>
+          );
+        }}
+      ></Controller>
     </div>
   );
-}
+};
 
 export default FloatingLabelInput;

@@ -9,8 +9,8 @@ import TableSkeleton from "@/components/Skeleton/TableSkeleton";
 function CategoriesPage() {
   const [categoriesData, setCategoriesData] = useState({
     categories: [],
-    loading: false,
     totalPage: 0,
+    loading: false,
     error: false,
   });
   const [currentPage, setCurrentPage] = useState(0);
@@ -22,8 +22,8 @@ function CategoriesPage() {
       if (statusCode === 200) {
         setCategoriesData({
           categories: data.items,
-          loading: false,
           totalPage: data.totalPage,
+          loading: false,
           error: false,
         });
       } else {
@@ -49,7 +49,7 @@ function CategoriesPage() {
         </Link>
       </div>
 
-      <div className="mt-8 max-h-[400px] overflow-x-auto rounded-md bg-white p-6">
+      <div className="mt-8 max-h-[400px] overflow-y-auto rounded-md bg-white p-6">
         {categoriesData.error ? (
           <div className="text-center">
             <span className="text-red-500">
