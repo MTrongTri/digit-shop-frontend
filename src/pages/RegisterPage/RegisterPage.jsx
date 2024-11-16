@@ -1,8 +1,8 @@
+import ErrorMessage from "@/components/Error/ErrorMessage";
 import { signup } from "@/services/authService";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
-import { BiError } from "react-icons/bi";
 import { FaEyeSlash } from "react-icons/fa6";
 import { IoEyeSharp } from "react-icons/io5";
 import { Link, useNavigate } from "react-router-dom";
@@ -69,12 +69,7 @@ function RegisterPage() {
         </div>
 
         {(errors.email || errorMessage) && (
-          <div className="mt-1">
-            <span className="flex items-center gap-1 text-xs text-red-500">
-              <BiError className="text-sm" />{" "}
-              {errors?.email?.message || errorMessage}
-            </span>
-          </div>
+          <ErrorMessage message={errors?.email?.message || errorMessage} />
         )}
 
         <div className="relative mt-5 flex flex-col gap-3">
@@ -104,13 +99,7 @@ function RegisterPage() {
           </button>
         </div>
 
-        {errors.password && (
-          <div className="mt-1">
-            <span className="flex items-center gap-1 text-xs text-red-500">
-              <BiError className="text-sm" /> {errors.password.message}
-            </span>
-          </div>
-        )}
+        {errors.password && <ErrorMessage message={errors.password.message} />}
 
         <div className="relative mt-5 flex flex-col gap-3">
           <label htmlFor="">Nhập lại mật khẩu</label>
@@ -140,11 +129,7 @@ function RegisterPage() {
         </div>
 
         {errors.confirmPassword && (
-          <div className="mt-1">
-            <span className="flex items-center gap-1 text-xs text-red-500">
-              <BiError className="text-sm" /> {errors.confirmPassword.message}
-            </span>
-          </div>
+          <ErrorMessage message={errors.confirmPassword.message} />
         )}
 
         <div className="mt-10">

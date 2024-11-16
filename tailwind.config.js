@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 /** @type {import('tailwindcss').Config} */
 export default {
   content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
@@ -14,10 +15,7 @@ export default {
       },
     },
   },
-  plugins: [
-    // eslint-disable-next-line no-undef
-    require("daisyui"),
-  ],
+  plugins: [require("daisyui")],
   daisyui: {
     themes: false,
     darkTheme: "light",

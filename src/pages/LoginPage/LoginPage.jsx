@@ -5,11 +5,11 @@ import { FaEyeSlash } from "react-icons/fa6";
 import { IoEyeSharp } from "react-icons/io5";
 import { useForm } from "react-hook-form";
 
-import { BiError } from "react-icons/bi";
 import { login } from "@/services/authService";
 import toast from "react-hot-toast";
 import { useDispatch } from "react-redux";
 import { setUser } from "@/stores/userSlice";
+import ErrorMessage from "@/components/Error/ErrorMessage";
 
 function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
@@ -84,13 +84,7 @@ function LoginPage() {
             })}
           />
         </div>
-        {errors.email && (
-          <div className="mt-1">
-            <span className="flex items-center gap-1 text-xs text-red-500">
-              <BiError className="text-sm" /> {errors.email.message}
-            </span>
-          </div>
-        )}
+        {errors.email && <ErrorMessage message={errors.email.message} />}
         <div className="relative mt-5 flex flex-col gap-3">
           <label htmlFor="">Mật khẩu</label>
           <input
@@ -118,21 +112,9 @@ function LoginPage() {
           </button>
         </div>
 
-        {errors.password && (
-          <div className="mt-1">
-            <span className="flex items-center gap-1 text-xs text-red-500">
-              <BiError className="text-sm" /> {errors.password.message}
-            </span>
-          </div>
-        )}
+        {errors.password && <ErrorMessage message={errors.password.message} />}
 
-        {errorMessage && (
-          <div className="mt-6">
-            <span className="flex items-center gap-1 text-xs text-red-500">
-              <BiError className="text-sm" /> {errorMessage}
-            </span>
-          </div>
-        )}
+        {errorMessage && <ErrorMessage message={errorMessage} />}
 
         <div className="mt-10 flex items-center">
           <button

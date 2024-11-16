@@ -1,9 +1,10 @@
-import ChooseFileInput from "@/components/Input/ChooseFileInput";
 import FloatingLabelInput from "@/components/Input/FloatingLabelInput";
-import { IoIosWarning } from "react-icons/io";
 
 import { useForm } from "react-hook-form";
 import clsx from "clsx";
+import ErrorMessage from "@/components/Error/ErrorMessage";
+import Button from "@/components/Button/Button";
+import ImgUpload from "@/components/Input/ImgUpload";
 
 function CreateCategoryPage() {
   const {
@@ -14,8 +15,6 @@ function CreateCategoryPage() {
     mode: "onSubmit",
     reValidateMode: "onSubmit",
   });
-
-  console.log(errors);
 
   const onSubmit = (formData) => {
     console.log(formData);
@@ -41,12 +40,7 @@ function CreateCategoryPage() {
               control={control}
               rules={{ required: "Tên không được bỏ trống" }}
             />
-            {errors.name && (
-              <div className="mt-2 flex items-center gap-1 text-xs text-red-500">
-                <IoIosWarning />
-                <span>{errors.name.message}</span>
-              </div>
-            )}
+            {errors.name && <ErrorMessage message={errors.name.message} />}
           </div>
 
           <div>
@@ -59,61 +53,43 @@ function CreateCategoryPage() {
               rules={{ required: "Mô tả không được bỏ trống" }}
               className={clsx(errors.desc && "border-red-500")}
             />
-            {errors.desc && (
-              <div className="mt-2 flex items-center gap-1 text-xs text-red-500">
-                <IoIosWarning />
-                <span>{errors.desc.message}</span>
-              </div>
-            )}
+            {errors.desc && <ErrorMessage message={errors.desc.message} />}
           </div>
 
           <div className="flex gap-6">
             <div>
               <span>Ảnh hiển thị</span>
               <div className="mt-2 aspect-square w-[200px]">
-                <ChooseFileInput
+                <ImgUpload
                   id="img"
                   name="img"
                   control={control}
                   rules={{ required: "Vui lòng chọn 1 ảnh" }}
                   className={clsx(errors.img && "border-red-500")}
+                  accept="image/png, image/jpg, image/jpeg"
                 />
-                {errors.img && (
-                  <div className="mt-2 flex items-center gap-1 text-xs text-red-500">
-                    <IoIosWarning />
-                    <span>{errors.img.message}</span>
-                  </div>
-                )}
+                {errors.img && <ErrorMessage message={errors.img.message} />}
               </div>
             </div>
 
             <div>
               <span>Icon</span>
               <div className="mt-2 aspect-square w-[200px]">
-                <ChooseFileInput
+                <ImgUpload
                   id="icon"
                   name="icon"
                   control={control}
                   rules={{ required: "Vui lòng chọn 1 ảnh" }}
                   className={clsx(errors.icon && "border-red-500")}
+                  accept="image/png, image/jpg, image/jpeg"
                 />
-                {errors.icon && (
-                  <div className="mt-2 flex items-center gap-1 text-xs text-red-500">
-                    <IoIosWarning />
-                    <span>{errors.icon.message}</span>
-                  </div>
-                )}
+                {errors.icon && <ErrorMessage message={errors.icon.message} />}
               </div>
             </div>
           </div>
 
           <div>
-            <button
-              type="submit"
-              className="float-end rounded-md bg-primary px-6 py-2 text-white"
-            >
-              Thêm
-            </button>
+            <Button type="submit">Thêm</Button>
           </div>
         </form>
       </div>
