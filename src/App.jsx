@@ -13,6 +13,8 @@ import AdminLayout from "@/components/layouts/AdminLayout/AdminLayout";
 import AdminDashboard from "@/pages/Admin/AdminDashboard";
 import CategoriesPage from "@/pages/Admin/Categories/CategoriesPage";
 import CreateCategoryPage from "@/pages/Admin/Categories/CreateCategoryPage";
+import PrivateAdminRoute from "./components/PrivateAdminRoute";
+import Forbidden from "./pages/Forbidden/Forbidden";
 
 function App() {
   return (
@@ -36,10 +38,18 @@ function App() {
                 </PrivateRoute>
               }
             ></Route>
+            <Route path="/forbidden" element={<Forbidden />}></Route>
             <Route path="*" element={<NotFoundPage />}></Route>
           </Route>
 
-          <Route path="/admin" element={<AdminLayout />}>
+          <Route
+            path="/admin"
+            element={
+              <PrivateAdminRoute>
+                <AdminLayout />
+              </PrivateAdminRoute>
+            }
+          >
             <Route path="dashboard" element={<AdminDashboard />}></Route>
             <Route path="categories" element={<CategoriesPage />}></Route>
             <Route

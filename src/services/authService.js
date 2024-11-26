@@ -26,4 +26,51 @@ const signup = async ({ email, password }) => {
   }
 };
 
+<<<<<<< HEAD
 export { login, signup };
+=======
+const logout = async ({ accessToken, refreshToken }) => {
+  try {
+    const res = await httpClient.post(
+      "/auth/logout",
+      {},
+      {
+        headers: {
+          "access-token": accessToken,
+          "refresh-token": refreshToken,
+        },
+      },
+    );
+
+    return res.data;
+  } catch (error) {
+    if (error.response) {
+      return error.response?.data;
+    }
+
+    return error;
+  }
+};
+
+const handleRefreshToken = async ({ refreshToken }) => {
+  try {
+    const res = await httpClient.post(
+      "/auth/refresh-token",
+      {},
+      {
+        headers: { "x-token": refreshToken },
+      },
+    );
+
+    return res.data;
+  } catch (error) {
+    if (error.response) {
+      return error.response?.data;
+    }
+
+    return error;
+  }
+};
+
+export { login, signup, logout, handleRefreshToken };
+>>>>>>> dev

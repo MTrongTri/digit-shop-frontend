@@ -39,11 +39,15 @@ function LoginPage() {
     setLoading(false);
 
     if (statusCode === 200) {
-      localStorage.setItem("userInfo", JSON.stringify(data));
-      userDispatch(setUser(data));
+      const { accessToken, refreshToken, user } = data;
+      localStorage.setItem("accessToken", accessToken);
+      localStorage.setItem("refreshToken", refreshToken);
+
+      localStorage.setItem("userInfo", JSON.stringify(user));
+      userDispatch(setUser(user));
 
       let redirectTo = "/";
-      const { roles } = data.user;
+      const { roles } = user;
       if (roles.includes("ADMIN")) {
         redirectTo = "/products/1";
       }
