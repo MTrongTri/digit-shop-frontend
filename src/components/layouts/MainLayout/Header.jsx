@@ -24,8 +24,8 @@ function Header() {
     const accessToken = localStorage.getItem("accessToken");
     const refreshToken = localStorage.getItem("refreshToken");
 
-    const { statusCode } = await logout({ accessToken, refreshToken });
-    if (statusCode >= 200 && statusCode < 400) {
+    const { statusCode, code } = await logout({ accessToken, refreshToken });
+    if ((statusCode >= 200 && statusCode < 400) || code === 2001) {
       toast.success("Đăng xuất thành công");
       removeInfoLogout();
       userDispatch(setUser(null));

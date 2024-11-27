@@ -5,8 +5,13 @@ import clsx from "clsx";
 import ErrorMessage from "@/components/Error/ErrorMessage";
 import Button from "@/components/Button/Button";
 import ImgUpload from "@/components/Input/ImgUpload";
+import { createCategory } from "@/services/categoryService";
+import toast from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
 
 function CreateCategoryPage() {
+  const navigate = useNavigate();
+
   const {
     control,
     handleSubmit,
@@ -16,8 +21,15 @@ function CreateCategoryPage() {
     reValidateMode: "onSubmit",
   });
 
-  const onSubmit = (formData) => {
-    console.log(formData);
+  const onSubmit = async (formData) => {
+    const { statusCode } = await createCategory(formData);
+
+    if (statusCode === 201) {
+      toast.success("Đã thêm danh mục thành công");
+      navigate("/admin/categories");
+    } else {
+      toast.error("Đã có lỗi xảy ra, vui lòng thử lại");
+    }
   };
 
   return (
@@ -46,14 +58,16 @@ function CreateCategoryPage() {
           <div>
             <FloatingLabelInput
               label="Mô tả"
-              name="desc"
+              name="description"
               type="text"
-              id="cate-desc"
+              id="cate-description"
               control={control}
               rules={{ required: "Mô tả không được bỏ trống" }}
-              className={clsx(errors.desc && "border-red-500")}
+              className={clsx(errors.description && "border-red-500")}
             />
-            {errors.desc && <ErrorMessage message={errors.desc.message} />}
+            {errors.description && (
+              <ErrorMessage message={errors.description.message} />
+            )}
           </div>
 
           <div className="flex gap-6">

@@ -28,4 +28,18 @@ const getCategoriesPage = async (pageNo = 0, pageSize = 12) => {
   }
 };
 
-export { getAllCategory, getCategoriesPage };
+const createCategory = async (data) => {
+  try {
+    const res = await httpClient.post("/categories", data);
+
+    return res.data;
+  } catch (error) {
+    if (error.response) {
+      return error.response?.data;
+    }
+
+    return error;
+  }
+};
+
+export { getAllCategory, getCategoriesPage, createCategory };

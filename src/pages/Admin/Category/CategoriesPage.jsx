@@ -5,6 +5,7 @@ import { FaRegEdit, FaRegTrashAlt } from "react-icons/fa";
 import { useEffect, useState } from "react";
 import { getCategoriesPage } from "@/services/categoryService";
 import TableSkeleton from "@/components/Skeleton/TableSkeleton";
+import TableManageContainer from "@/components/Container/TableManageContainer";
 
 function CategoriesPage() {
   const [categoriesData, setCategoriesData] = useState({
@@ -49,7 +50,7 @@ function CategoriesPage() {
         </Link>
       </div>
 
-      <div className="mt-8 max-h-[400px] overflow-y-auto rounded-md bg-white p-6">
+      <TableManageContainer>
         {categoriesData.error ? (
           <div className="text-center">
             <span className="text-red-500">
@@ -100,7 +101,7 @@ function CategoriesPage() {
             </tbody>
           </table>
         )}
-      </div>
+      </TableManageContainer>
 
       <div className="mt-6 flex justify-center">
         <Pagination

@@ -49,7 +49,7 @@ function LoginPage() {
       let redirectTo = "/";
       const { roles } = user;
       if (roles.includes("ADMIN")) {
-        redirectTo = "/products/1";
+        redirectTo = "/admin/dashboard";
       }
 
       if (location.state?.from?.pathname) {

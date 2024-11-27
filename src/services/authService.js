@@ -26,9 +26,6 @@ const signup = async ({ email, password }) => {
   }
 };
 
-<<<<<<< HEAD
-export { login, signup };
-=======
 const logout = async ({ accessToken, refreshToken }) => {
   try {
     const res = await httpClient.post(
@@ -72,5 +69,26 @@ const handleRefreshToken = async ({ refreshToken }) => {
   }
 };
 
-export { login, signup, logout, handleRefreshToken };
->>>>>>> dev
+const introspect = async () => {
+  try {
+    const token = localStorage.getItem("accessToken");
+
+    const res = await httpClient.post(
+      "/auth/introspect",
+      {},
+      {
+        headers: { token: token },
+      },
+    );
+
+    return res.data;
+  } catch (error) {
+    if (error.response) {
+      return error.response?.data;
+    }
+
+    return error;
+  }
+};
+
+export { login, signup, logout, handleRefreshToken, introspect };

@@ -4,6 +4,7 @@ import { AiFillProduct } from "react-icons/ai";
 import { MdCategory } from "react-icons/md";
 
 import { Link, useLocation } from "react-router-dom";
+import clsx from "clsx";
 
 const MENU_ITEMS = [
   {
@@ -43,7 +44,15 @@ function Sidebar() {
           <ul>
             {MENU_ITEMS.map((item) => (
               <li
-                className={`rounded-md duration-300 hover:bg-[#00B074]/20 hover:text-[#00B074] ${item.to === path.pathname ? "bg-[#00B074]/20 font-semibold text-[#00B074]" : ""}`}
+                className={clsx(
+                  "rounded-md duration-300 hover:bg-[#00B074]/20 hover:text-[#00B074]",
+                  {
+                    "bg-[#00B074]/20 font-semibold text-[#00B074]":
+                      item.to === path.pathname ||
+                      (path.pathname === "/admin" &&
+                        item.to === "/admin/dashboard"),
+                  },
+                )}
                 key={item.name}
               >
                 <Link

@@ -3,19 +3,12 @@ import { upload } from "@/services/uploadService";
 import clsx from "clsx";
 import { useEffect, useState } from "react";
 import { Controller } from "react-hook-form";
-<<<<<<< HEAD
-=======
-import toast from "react-hot-toast";
->>>>>>> dev
 import { IoCloudUploadOutline } from "react-icons/io5";
 
 const ImgUpload = ({ name, id, control, rules, className, ...props }) => {
   const [previewImg, setPreviewImg] = useState("");
   const [uploadPercentage, setUploadPercentage] = useState(0);
-<<<<<<< HEAD
-=======
   const [hasErroUpload, setHasErrorUpload] = useState(false);
->>>>>>> dev
 
   useEffect(() => {
     return () => {
@@ -44,15 +37,6 @@ const ImgUpload = ({ name, id, control, rules, className, ...props }) => {
                 <img
                   src={previewImg}
                   alt=""
-<<<<<<< HEAD
-                  className={clsx(
-                    uploadPercentage < 100 &&
-                      uploadPercentage != 0 &&
-                      "opacity-20",
-                  )}
-                />
-                {uploadPercentage > 0 && (
-=======
                   className={clsx({
                     "opacity-20":
                       (uploadPercentage < 100 && uploadPercentage != 0) ||
@@ -60,7 +44,6 @@ const ImgUpload = ({ name, id, control, rules, className, ...props }) => {
                   })}
                 />
                 {(uploadPercentage > 0 || hasErroUpload) && (
->>>>>>> dev
                   <progress
                     className="progress progress-info absolute left-1/2 top-1/2 w-[100px] -translate-x-1/2 -translate-y-1/2"
                     value={uploadPercentage}
@@ -84,16 +67,9 @@ const ImgUpload = ({ name, id, control, rules, className, ...props }) => {
               {...props}
               onChange={async (e) => {
                 const files = e.target.files;
-<<<<<<< HEAD
-
-                if (files[0]) {
-                  setPreviewImg(URL.createObjectURL(files[0]));
-
-=======
                 setPreviewImg(URL.createObjectURL(files[0]));
 
                 if (files[0]) {
->>>>>>> dev
                   const formData = new FormData();
                   formData.append("file", files[0]);
                   const { statusCode, data } = await upload(
@@ -110,15 +86,10 @@ const ImgUpload = ({ name, id, control, rules, className, ...props }) => {
                   if (statusCode === 201) {
                     const { publicId, url } = data;
                     field.onChange({ publicId, url });
+                  } else {
+                    setHasErrorUpload(true);
+                    toast.error("Đã có lỗi xảy ra, vui lòng thử lại");
                   }
-<<<<<<< HEAD
-=======
-                  else {
-                    setHasErrorUpload(true)
-                    toast.error("Đã có lỗi xảy ra, vui lòng thử lại")
-                  }
-
->>>>>>> dev
                 }
               }}
               className="hidden"
