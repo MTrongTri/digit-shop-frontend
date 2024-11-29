@@ -18,6 +18,7 @@ import ForbiddenPage from "./pages/ErrorPage/ForbiddenPage";
 import ServerErrorPage from "./pages/ErrorPage/ServerErrorPage";
 import ProductPage from "./pages/Admin/Product/ProductPage";
 import CreateProductPage from "./pages/Admin/Product/CreateProductPage";
+import UpdateCategoryPage from "./pages/Admin/Category/UpdateCategoryPage";
 
 function App() {
   return (
@@ -60,6 +61,10 @@ function App() {
             <Route
               path="categories/create"
               element={<CreateCategoryPage />}
+            ></Route>
+            <Route
+              path="categories/update/:id"
+              element={<UpdateCategoryPage />}
             ></Route>
             <Route path="products" element={<ProductPage />}></Route>
             <Route

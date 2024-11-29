@@ -9,6 +9,7 @@ import clsx from "clsx";
 import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
 
 function CreateProductPage() {
   const [categoriesData, setCategoriesData] = useState({
@@ -19,6 +20,9 @@ function CreateProductPage() {
   });
   const [isUploading, setIsUploading] = useState(false);
   const [deletePreviewImg, setDeletePreviewimg] = useState(false);
+
+  const navigate = useNavigate();
+
   const {
     control,
     reset,
@@ -28,7 +32,6 @@ function CreateProductPage() {
     mode: "onSubmit",
     reValidateMode: "onSubmit",
     defaultValues: {
-      img: {},
       secondaryImages: [],
     },
   });
@@ -45,6 +48,7 @@ function CreateProductPage() {
         });
       } else {
         setCategoriesData((prevState) => ({ ...prevState, error: true }));
+        navigate("/server-error");
       }
     };
 

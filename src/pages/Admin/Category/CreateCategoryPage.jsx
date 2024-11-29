@@ -7,23 +7,19 @@ import Button from "@/components/Button/Button";
 import ImgUpload from "@/components/Input/ImgUpload";
 import { createCategory } from "@/services/categoryService";
 import toast from "react-hot-toast";
-import { useNavigate } from "react-router-dom";
 
 function CreateCategoryPage() {
-  const navigate = useNavigate();
+  const [isUploading, setIsUploading] = useState(false);
+  const [deletePreviewImg, setDeletePreviewimg] = useState(false);
 
   const {
     control,
+    reset,
     handleSubmit,
-    setValue,
     formState: { errors },
   } = useForm({
     mode: "onSubmit",
     reValidateMode: "onSubmit",
-    defaultValues: {
-      img: [],
-      icon: [],
-    },
   });
 
   const onSubmit = async (formData) => {
@@ -31,7 +27,8 @@ function CreateCategoryPage() {
 
     if (statusCode === 201) {
       toast.success("Đã thêm danh mục thành công");
-      navigate("/admin/categories");
+      reset();
+      setDeletePreviewimg(true);
     } else {
       toast.error("Đã có lỗi xảy ra, vui lòng thử lại");
     }
@@ -84,7 +81,8 @@ function CreateCategoryPage() {
                   name="img"
                   control={control}
                   rules={{ required: "Vui lòng chọn 1 ảnh" }}
-                  setValue={setValue}
+                  setIsUploading={setIsUploading}
+                  delePreviewImg={deletePreviewImg}
                   className={clsx(errors.img && "border-red-500")}
                   accept="image/png, image/jpg, image/jpeg"
                 />
@@ -100,7 +98,8 @@ function CreateCategoryPage() {
                   name="icon"
                   control={control}
                   rules={{ required: "Vui lòng chọn 1 ảnh" }}
-                  setValue={setValue}
+                  setIsUploading={setIsUploading}
+                  delePreviewImg={deletePreviewImg}
                   className={clsx(errors.icon && "border-red-500")}
                   accept="image/png, image/jpg, image/jpeg"
                 />
@@ -110,7 +109,9 @@ function CreateCategoryPage() {
           </div>
 
           <div>
-            <Button type="submit">Thêm</Button>
+            <Button type="submit" disabled={isUploading}>
+              Thêm
+            </Button>
           </div>
         </form>
       </div>

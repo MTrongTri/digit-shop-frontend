@@ -88,11 +88,12 @@ function CategoriesPage() {
                   </td>
                   <td>
                     <div className="flex gap-4">
-                      <Link className="tooltip" data-tip="Chỉnh sửa">
+                      <Link
+                        className="tooltip"
+                        to={`/admin/categories/update/${cate.id}`}
+                        data-tip="Chỉnh sửa"
+                      >
                         <FaRegEdit className="size-4 text-primary" />
-                      </Link>
-                      <Link className="tooltip" data-tip="Xóa">
-                        <FaRegTrashAlt className="size-4 text-red-400" />
                       </Link>
                     </div>
                   </td>
