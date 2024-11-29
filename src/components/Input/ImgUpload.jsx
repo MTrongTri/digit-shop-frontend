@@ -5,18 +5,32 @@ import { useEffect, useState } from "react";
 import { Controller } from "react-hook-form";
 import { IoCloudUploadOutline } from "react-icons/io5";
 
-const ImgUpload = ({ name, id, control, rules, className, ...props }) => {
+const ImgUpload = ({
+  name,
+  id,
+  control,
+  rules,
+  className,
+  setIsUploading,
+  delePreviewImg,
+  ...props
+}) => {
   const [previewImg, setPreviewImg] = useState("");
   const [uploadPercentage, setUploadPercentage] = useState(0);
   const [hasErroUpload, setHasErrorUpload] = useState(false);
 
   useEffect(() => {
+    if (delePreviewImg && previewImg) {
+      setPreviewImg("");
+      URL.revokeObjectURL(previewImg);
+    }
+
     return () => {
       if (previewImg) {
         URL.revokeObjectURL(previewImg);
       }
     };
-  }, [previewImg]);
+  }, [previewImg, delePreviewImg]);
 
   return (
     <div className="flex h-full w-full items-center justify-center">
@@ -39,7 +53,7 @@ const ImgUpload = ({ name, id, control, rules, className, ...props }) => {
                   alt=""
                   className={clsx({
                     "opacity-20":
-                      (uploadPercentage < 100 && uploadPercentage != 0) ||
+                      (uploadPercentage <= 100 && uploadPercentage != 0) ||
                       hasErroUpload,
                   })}
                 />
@@ -72,16 +86,16 @@ const ImgUpload = ({ name, id, control, rules, className, ...props }) => {
                 if (files[0]) {
                   const formData = new FormData();
                   formData.append("file", files[0]);
+
+                  setIsUploading(true);
                   const { statusCode, data } = await upload(
                     formData,
                     (percentage) => {
-                      console.log(percentage);
                       setUploadPercentage(percentage);
-                      if (percentage === 100) {
-                        setUploadPercentage(0);
-                      }
                     },
                   );
+                  setIsUploading(false);
+                  setUploadPercentage(0);
 
                   if (statusCode === 201) {
                     const { publicId, url } = data;

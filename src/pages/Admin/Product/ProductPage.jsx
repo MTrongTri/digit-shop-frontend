@@ -4,6 +4,7 @@ import TableSkeleton from "@/components/Skeleton/TableSkeleton";
 import { getProductPaginate } from "@/services/productService";
 import { Link } from "react-router-dom";
 import Pagination from "@/components/Pagination";
+import { FaRegEdit, FaRegTrashAlt } from "react-icons/fa";
 
 function ProductPage() {
   const [productsData, setproductsData] = useState({
@@ -65,6 +66,8 @@ function ProductPage() {
                 <th>Tên</th>
                 <th>Ảnh</th>
                 <th>Giá</th>
+                <th>Số lượng còn</th>
+                <th>Còn kinh doanh</th>
                 <th>Thao tác</th>
               </tr>
             </thead>
@@ -73,15 +76,15 @@ function ProductPage() {
                 <tr key={cate.id}>
                   <td>{cate.name}</td>
                   <td>
-                    <td>{cate.price}</td>
-                  </td>
-                  <td>
-                    <div className="mask mask-squircle h-12 w-12">
-                      <img src={`${cate.price}`} alt="icon cate" />
+                    <div className="mask h-12 w-12">
+                      <img src={`${cate.imgUrl}`} alt="icon cate" />
                     </div>
                   </td>
+                  <td>{Number(cate.price).toLocaleString("Vi")}đ</td>
+                  <td>{cate.stockQuantity}</td>
+                  <td>{cate.inStock ? "Còn" : "Ngừng kinh doanh"}</td>
                   <td>
-                    <div className="flex gap-4">
+                    <div className="flex items-center gap-4">
                       <Link className="tooltip" data-tip="Chỉnh sửa">
                         <FaRegEdit className="size-4 text-primary" />
                       </Link>

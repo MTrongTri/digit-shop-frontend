@@ -26,4 +26,18 @@ const getProductPaginate = async ({
   }
 };
 
-export { getProductPaginate };
+const createProduct = async (data) => {
+  try {
+    const res = await httpClient.post(`/products`, data);
+
+    return res.data;
+  } catch (error) {
+    if (error.response) {
+      return error.response?.data;
+    }
+
+    return error;
+  }
+};
+
+export { getProductPaginate, createProduct };

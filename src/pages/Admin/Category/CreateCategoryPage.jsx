@@ -15,10 +15,15 @@ function CreateCategoryPage() {
   const {
     control,
     handleSubmit,
+    setValue,
     formState: { errors },
   } = useForm({
     mode: "onSubmit",
     reValidateMode: "onSubmit",
+    defaultValues: {
+      img: [],
+      icon: [],
+    },
   });
 
   const onSubmit = async (formData) => {
@@ -79,6 +84,7 @@ function CreateCategoryPage() {
                   name="img"
                   control={control}
                   rules={{ required: "Vui lòng chọn 1 ảnh" }}
+                  setValue={setValue}
                   className={clsx(errors.img && "border-red-500")}
                   accept="image/png, image/jpg, image/jpeg"
                 />
@@ -94,6 +100,7 @@ function CreateCategoryPage() {
                   name="icon"
                   control={control}
                   rules={{ required: "Vui lòng chọn 1 ảnh" }}
+                  setValue={setValue}
                   className={clsx(errors.icon && "border-red-500")}
                   accept="image/png, image/jpg, image/jpeg"
                 />
