@@ -26,6 +26,32 @@ const getProductPaginate = async ({
   }
 };
 
+const getProductAdminPage = async ({
+  currentPage,
+  pageSize = 12,
+  keySearch,
+  sortBy,
+}) => {
+  try {
+    const res = await httpClient.get(`/products/all`, {
+      params: {
+        pageNo: currentPage,
+        pageSize,
+        keySearch,
+        sortBy,
+      },
+    });
+
+    return res.data;
+  } catch (error) {
+    if (error.response) {
+      return error.response?.data;
+    }
+
+    return error;
+  }
+};
+
 const createProduct = async (data) => {
   try {
     const res = await httpClient.post(`/products`, data);
@@ -40,4 +66,4 @@ const createProduct = async (data) => {
   }
 };
 
-export { getProductPaginate, createProduct };
+export { getProductPaginate, getProductAdminPage, createProduct };

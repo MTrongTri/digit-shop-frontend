@@ -7,10 +7,14 @@ import Button from "@/components/Button/Button";
 import ImgUpload from "@/components/Input/ImgUpload";
 import { createCategory } from "@/services/categoryService";
 import toast from "react-hot-toast";
+import { useState } from "react";
+import ModalConfirm from "@/components/Modal/ModalConfirm";
 
 function CreateCategoryPage() {
   const [isUploading, setIsUploading] = useState(false);
   const [deletePreviewImg, setDeletePreviewimg] = useState(false);
+  const [isOpenModal, setIsOpenModal] = useState(false);
+  const [cateData, setCateData] = useState(null);
 
   const {
     control,
@@ -23,15 +27,26 @@ function CreateCategoryPage() {
   });
 
   const onSubmit = async (formData) => {
-    const { statusCode } = await createCategory(formData);
+    setIsOpenModal(true);
+    setCateData(formData);
+  };
+
+  const handleConfirm = async () => {
+    const { statusCode } = await createCategory(cateData);
 
     if (statusCode === 201) {
-      toast.success("Đã thêm danh mục thành công");
+      toast.success("Đã thêm danh mục sản phẩm thành công");
       reset();
       setDeletePreviewimg(true);
     } else {
       toast.error("Đã có lỗi xảy ra, vui lòng thử lại");
     }
+
+    setIsOpenModal(false);
+  };
+
+  const handleCancel = () => {
+    setIsOpenModal(false);
   };
 
   return (
@@ -78,7 +93,7 @@ function CreateCategoryPage() {
               <div className="mt-2 aspect-square w-[200px]">
                 <ImgUpload
                   id="img"
-                  name="img"
+                  name="imgId"
                   control={control}
                   rules={{ required: "Vui lòng chọn 1 ảnh" }}
                   setIsUploading={setIsUploading}
@@ -95,7 +110,7 @@ function CreateCategoryPage() {
               <div className="mt-2 aspect-square w-[200px]">
                 <ImgUpload
                   id="icon"
-                  name="icon"
+                  name="iconId"
                   control={control}
                   rules={{ required: "Vui lòng chọn 1 ảnh" }}
                   setIsUploading={setIsUploading}
@@ -115,6 +130,15 @@ function CreateCategoryPage() {
           </div>
         </form>
       </div>
+
+      {isOpenModal && (
+        <ModalConfirm
+          heading="Xác nhận thêm danh mục sản phẩm"
+          message="Bạn có chắn là muốn thêm 1 danh mục sản phẩm không?"
+          onConfirm={handleConfirm}
+          onCancel={handleCancel}
+        />
+      )}
     </div>
   );
 }

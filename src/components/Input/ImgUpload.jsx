@@ -1,5 +1,5 @@
 /* eslint-disable react/prop-types */
-import { upload } from "@/services/uploadService";
+import { upload } from "@/services/mediaService";
 import clsx from "clsx";
 import { useEffect, useState } from "react";
 import { Controller } from "react-hook-form";
@@ -90,7 +90,7 @@ const ImgUpload = ({
 
                   if (files[0]) {
                     const formData = new FormData();
-                    formData.append("file", files[0]);
+                    formData.append("mediaFile", files[0]);
 
                     if (previewImg) {
                       URL.revokeObjectURL(previewImg);
@@ -109,8 +109,7 @@ const ImgUpload = ({
                     setUploadPercentage(0);
 
                     if (statusCode === 201) {
-                      const { publicId, url } = data;
-                      field.onChange({ publicId, url });
+                      field.onChange(data.id);
                     } else {
                       setHasErrorUpload(true);
                       toast.error("Đã có lỗi xảy ra, vui lòng thử lại");

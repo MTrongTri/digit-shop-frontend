@@ -16,7 +16,7 @@ const upload = async (formData, onProgress) => {
   };
 
   try {
-    const { data } = await httpClient.post("/upload", formData, config);
+    const { data } = await httpClient.post("/medias", formData, config);
     return data;
   } catch (error) {
     if (error.response) {

@@ -55,7 +55,7 @@ function HomePage() {
         ) : (
           <ProductContainer>
             {productData.products.map((item) => (
-              <ProductCard key={item.id} data={item} />
+              <ProductCard key={item.Id} data={item} />
             ))}
           </ProductContainer>
         )}

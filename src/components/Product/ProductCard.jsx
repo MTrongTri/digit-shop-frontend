@@ -8,10 +8,14 @@ function ProductCard({ data }) {
     <div className="h-[360px] duration-300 hover:shadow-[rgba(0,_0,_0,_0.24)_0px_0px_4px]">
       <Link
         className="block h-full rounded-[4px] border border-gray-200"
-        to={`/products/${data.id}`}
+        to={`/products/${data.Id}`}
       >
         <div className="mt-3 flex aspect-square w-full items-center p-1">
-          <img className="duration-300 hover:-mt-2" src={data.imgUrl} alt="" />
+          <img
+            className="duration-300 hover:-mt-2"
+            src={data.thumbnailUrl}
+            alt=""
+          />
         </div>
 
         <div className="flex flex-col gap-2 p-2">

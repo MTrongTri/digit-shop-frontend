@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import TableManageContainer from "@/components/Container/TableManageContainer";
 import TableSkeleton from "@/components/Skeleton/TableSkeleton";
-import { getProductPaginate } from "@/services/productService";
+import { getProductAdminPage } from "@/services/productService";
 import { Link } from "react-router-dom";
 import Pagination from "@/components/Pagination";
 import { FaRegEdit, FaRegTrashAlt } from "react-icons/fa";
@@ -18,7 +18,7 @@ function ProductPage() {
   useEffect(() => {
     const fetchproductsData = async () => {
       setproductsData((prevState) => ({ ...prevState, loading: true }));
-      const { statusCode, data } = await getProductPaginate({ currentPage });
+      const { statusCode, data } = await getProductAdminPage({ currentPage });
       if (statusCode === 200) {
         setproductsData({
           products: data.items,
@@ -73,16 +73,16 @@ function ProductPage() {
             </thead>
             <tbody>
               {productsData.products.map((cate) => (
-                <tr key={cate.id}>
+                <tr key={cate.Id}>
                   <td>{cate.name}</td>
                   <td>
                     <div className="mask h-12 w-12">
-                      <img src={`${cate.imgUrl}`} alt="icon cate" />
+                      <img src={`${cate.thumbnailUrl}`} alt="icon cate" />
                     </div>
                   </td>
                   <td>{Number(cate.price).toLocaleString("Vi")}đ</td>
                   <td>{cate.stockQuantity}</td>
-                  <td>{cate.inStock ? "Còn" : "Ngừng kinh doanh"}</td>
+                  <td>{cate.isActive ? "Còn" : "Ngừng kinh doanh"}</td>
                   <td>
                     <div className="flex items-center gap-4">
                       <Link className="tooltip" data-tip="Chỉnh sửa">
