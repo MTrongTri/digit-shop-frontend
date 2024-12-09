@@ -19,11 +19,13 @@ import ServerErrorPage from "./pages/ErrorPage/ServerErrorPage";
 import ProductPage from "./pages/Admin/Product/ProductPage";
 import CreateProductPage from "./pages/Admin/Product/CreateProductPage";
 import UpdateCategoryPage from "./pages/Admin/Category/UpdateCategoryPage";
+import LoadingCircleFullScreen from "./components/Loading/LoadingCircleFullScreen";
 
 function App() {
   return (
     <div className="bg-[#F5F5FA]">
       <Toaster />
+      <LoadingCircleFullScreen />
       <BrowserRouter>
         <Routes>
           <Route element={<AuthLayout />}>

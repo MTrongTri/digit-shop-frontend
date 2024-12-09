@@ -1,6 +1,6 @@
 /* eslint-disable react/prop-types */
 import clsx from "clsx";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Controller } from "react-hook-form";
 
 const FloatingLabelInput = ({
@@ -24,6 +24,10 @@ const FloatingLabelInput = ({
         rules={rules}
         defaultValue={defaultValue}
         render={({ field }) => {
+          useEffect(() => {
+            setHasValue(!!field.value);
+          }, [field.value]);
+
           return (
             <>
               <label

@@ -12,14 +12,14 @@ import ModalConfirm from "@/components/Modal/ModalConfirm";
 
 function CreateCategoryPage() {
   const [isUploading, setIsUploading] = useState(false);
-  const [deletePreviewImg, setDeletePreviewimg] = useState(false);
   const [isOpenModal, setIsOpenModal] = useState(false);
+  const [resetPreviewImg, setResetPreviewImg] = useState(false);
   const [cateData, setCateData] = useState(null);
 
   const {
     control,
-    reset,
     handleSubmit,
+    reset,
     formState: { errors },
   } = useForm({
     mode: "onSubmit",
@@ -35,9 +35,9 @@ function CreateCategoryPage() {
     const { statusCode } = await createCategory(cateData);
 
     if (statusCode === 201) {
-      toast.success("Đã thêm danh mục sản phẩm thành công");
       reset();
-      setDeletePreviewimg(true);
+      setResetPreviewImg(true);
+      toast.success("Tạo danh mục sản phẩm thành công");
     } else {
       toast.error("Đã có lỗi xảy ra, vui lòng thử lại");
     }
@@ -97,7 +97,8 @@ function CreateCategoryPage() {
                   control={control}
                   rules={{ required: "Vui lòng chọn 1 ảnh" }}
                   setIsUploading={setIsUploading}
-                  delePreviewImg={deletePreviewImg}
+                  resetPreviewImg={resetPreviewImg}
+                  setResetPreviewImg={setResetPreviewImg}
                   className={clsx(errors.img && "border-red-500")}
                   accept="image/png, image/jpg, image/jpeg"
                 />
@@ -114,7 +115,8 @@ function CreateCategoryPage() {
                   control={control}
                   rules={{ required: "Vui lòng chọn 1 ảnh" }}
                   setIsUploading={setIsUploading}
-                  delePreviewImg={deletePreviewImg}
+                  resetPreviewImg={resetPreviewImg}
+                  setResetPreviewImg={setResetPreviewImg}
                   className={clsx(errors.icon && "border-red-500")}
                   accept="image/png, image/jpg, image/jpeg"
                 />

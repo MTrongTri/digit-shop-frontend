@@ -25,8 +25,8 @@ function CreateProductPage() {
     error: false,
   });
   const [isUploading, setIsUploading] = useState(false);
-  const [deletePreviewImg, setDeletePreviewimg] = useState(false);
   const [isOpenModal, setIsOpenModal] = useState(false);
+  const [resetPreviewImg, setResetPreviewImg] = useState(false);
   const [productData, setProductData] = useState(null);
 
   const navigate = useNavigate();
@@ -102,9 +102,7 @@ function CreateProductPage() {
     const { statusCode } = await createProduct(productData);
 
     if (statusCode === 201) {
-      toast.success("Đã thêm sản phẩm thành công");
-      reset();
-      setDeletePreviewimg(true);
+      window.location.reload();
     } else {
       toast.error("Đã có lỗi xảy ra, vui lòng thử lại");
     }
@@ -236,7 +234,8 @@ function CreateProductPage() {
                   control={control}
                   rules={{ required: "Vui lòng chọn 1 ảnh" }}
                   setIsUploading={setIsUploading}
-                  delePreviewImg={deletePreviewImg}
+                  resetPreviewImg={resetPreviewImg}
+                  setResetPreviewImg={setResetPreviewImg}
                   className={clsx(errors.thumbnail && "border-red-500")}
                   accept="image/png, image/jpg, image/jpeg"
                 />
@@ -257,7 +256,8 @@ function CreateProductPage() {
                     name={`images.${index}`}
                     control={control}
                     setIsUploading={setIsUploading}
-                    delePreviewImg={deletePreviewImg}
+                    resetPreviewImg={resetPreviewImg}
+                    setResetPreviewImg={setResetPreviewImg}
                     accept="image/png, image/jpg, image/jpeg"
                   />
                 </div>

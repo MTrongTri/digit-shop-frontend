@@ -77,12 +77,12 @@ function CategoriesPage() {
                   <td>{cate.name}</td>
                   <td>{cate.description}</td>
                   <td>
-                    <div className="mask mask-squircle h-12 w-12">
+                    <div className="mask h-12 w-12">
                       <img src={`${cate.imgUrl}`} alt="Img cate" />
                     </div>
                   </td>
                   <td>
-                    <div className="mask mask-squircle h-12 w-12">
+                    <div className="mask h-12 w-12">
                       <img src={`${cate.iconUrl}`} alt="icon cate" />
                     </div>
                   </td>

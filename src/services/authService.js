@@ -61,11 +61,7 @@ const handleRefreshToken = async ({ refreshToken }) => {
 
     return res.data;
   } catch (error) {
-    if (error.response) {
-      return error.response?.data;
-    }
-
-    return error;
+    throw error;
   }
 };
 
@@ -83,11 +79,7 @@ const introspect = async () => {
 
     return res.data;
   } catch (error) {
-    if (error.response) {
-      return error.response?.data;
-    }
-
-    return error;
+    throw error;
   }
 };
 

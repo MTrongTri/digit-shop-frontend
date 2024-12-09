@@ -9,12 +9,13 @@ import { IoMdClose } from "react-icons/io";
 const ImgUpload = ({
   name,
   id,
-  url = "",
+  url = null,
   control,
   rules,
   className,
   setIsUploading,
-  delePreviewImg,
+  resetPreviewImg,
+  setResetPreviewImg,
   ...props
 }) => {
   const [previewImg, setPreviewImg] = useState(url);
@@ -23,17 +24,26 @@ const ImgUpload = ({
   const [disabledButton, setDisabledButton] = useState(false);
 
   useEffect(() => {
-    if (delePreviewImg && previewImg) {
-      setPreviewImg("");
-      URL.revokeObjectURL(previewImg);
-    }
-
     return () => {
       if (previewImg) {
         URL.revokeObjectURL(previewImg);
       }
     };
-  }, [previewImg, delePreviewImg]);
+  }, [previewImg]);
+
+  useEffect(() => {
+    if (resetPreviewImg && previewImg) {
+      URL.revokeObjectURL(previewImg);
+    }
+    setPreviewImg(null);
+    if (setResetPreviewImg) setResetPreviewImg(false);
+  }, [resetPreviewImg]);
+
+  useEffect(() => {
+    if (url) {
+      setPreviewImg(url);
+    }
+  }, [url]);
 
   return (
     <div className="relative flex h-full w-full items-center justify-center">
@@ -86,15 +96,11 @@ const ImgUpload = ({
                 {...props}
                 onChange={async (e) => {
                   const files = e.target.files;
-                  setPreviewImg(URL.createObjectURL(files[0]));
 
                   if (files[0]) {
+                    setPreviewImg(URL.createObjectURL(files[0]));
                     const formData = new FormData();
                     formData.append("mediaFile", files[0]);
-
-                    if (previewImg) {
-                      URL.revokeObjectURL(previewImg);
-                    }
 
                     setIsUploading(true);
                     setDisabledButton(true);
@@ -115,6 +121,8 @@ const ImgUpload = ({
                       toast.error("Đã có lỗi xảy ra, vui lòng thử lại");
                     }
                   }
+
+                  e.target.value = null;
                 }}
                 className="hidden"
               />
@@ -128,8 +136,8 @@ const ImgUpload = ({
                   e.stopPropagation();
                   if (previewImg) {
                     URL.revokeObjectURL(previewImg);
-                    setPreviewImg("");
                   }
+                  setPreviewImg("");
                   field.onChange(null);
                 }}
               >
