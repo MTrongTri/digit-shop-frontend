@@ -9,12 +9,15 @@ import { createCategory } from "@/services/categoryService";
 import toast from "react-hot-toast";
 import { useState } from "react";
 import ModalConfirm from "@/components/Modal/ModalConfirm";
+import { useDispatch } from "react-redux";
+import { hideLoading, showLoading } from "@/stores/loadingSlice";
 
 function CreateCategoryPage() {
   const [isUploading, setIsUploading] = useState(false);
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [resetPreviewImg, setResetPreviewImg] = useState(false);
   const [cateData, setCateData] = useState(null);
+  const dispatch = useDispatch();
 
   const {
     control,
@@ -32,17 +35,18 @@ function CreateCategoryPage() {
   };
 
   const handleConfirm = async () => {
-    const { statusCode } = await createCategory(cateData);
-
-    if (statusCode === 201) {
+    dispatch(showLoading());
+    setIsOpenModal(false);
+    try {
+      await createCategory(cateData);
       reset();
       setResetPreviewImg(true);
       toast.success("Tạo danh mục sản phẩm thành công");
-    } else {
+    } catch (error) {
       toast.error("Đã có lỗi xảy ra, vui lòng thử lại");
+    } finally {
+      dispatch(hideLoading());
     }
-
-    setIsOpenModal(false);
   };
 
   const handleCancel = () => {

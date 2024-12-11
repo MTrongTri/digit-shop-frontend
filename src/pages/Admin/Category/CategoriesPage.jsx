@@ -1,15 +1,15 @@
 import Pagination from "@/components/Pagination";
 import { Link } from "react-router-dom";
 
-import { FaRegEdit, FaRegTrashAlt } from "react-icons/fa";
+import { FaRegEdit } from "react-icons/fa";
 import { useEffect, useState } from "react";
 import { getCategoriesPage } from "@/services/categoryService";
 import TableSkeleton from "@/components/Skeleton/TableSkeleton";
 import TableManageContainer from "@/components/Container/TableManageContainer";
 
 function CategoriesPage() {
-  const [categoriesData, setCategoriesData] = useState({
-    categories: [],
+  const [categories, setCategories] = useState({
+    data: [],
     totalPage: 0,
     loading: false,
     error: false,
@@ -18,17 +18,19 @@ function CategoriesPage() {
 
   useEffect(() => {
     const fetchCategoriesData = async () => {
-      setCategoriesData((prevState) => ({ ...prevState, loading: true }));
-      const { statusCode, data } = await getCategoriesPage(currentPage, 4);
-      if (statusCode === 200) {
-        setCategoriesData({
-          categories: data.items,
+      setCategories((prevState) => ({ ...prevState, loading: true }));
+      try {
+        const { data } = await getCategoriesPage(currentPage, 4);
+        setCategories({
+          data: data.items,
           totalPage: data.totalPage,
           loading: false,
           error: false,
         });
-      } else {
-        setCategoriesData((prevState) => ({ ...prevState, error: true }));
+      } catch (error) {
+        setCategories((prevState) => ({ ...prevState, error: true }));
+      } finally {
+        setCategories((prevState) => ({ ...prevState, loading: false }));
       }
     };
 
@@ -51,13 +53,13 @@ function CategoriesPage() {
       </div>
 
       <TableManageContainer>
-        {categoriesData.error ? (
+        {categories.error ? (
           <div className="text-center">
             <span className="text-red-500">
               Đã có lỗi xảy ra, vui lòng thử lại
             </span>
           </div>
-        ) : categoriesData.loading ? (
+        ) : categories.loading ? (
           <TableSkeleton />
         ) : (
           <table className="table">
@@ -72,7 +74,7 @@ function CategoriesPage() {
               </tr>
             </thead>
             <tbody>
-              {categoriesData.categories.map((cate) => (
+              {categories.data.map((cate) => (
                 <tr key={cate.id}>
                   <td>{cate.name}</td>
                   <td>{cate.description}</td>
@@ -107,7 +109,7 @@ function CategoriesPage() {
       <div className="mt-6 flex justify-center">
         <Pagination
           currentPage={currentPage}
-          totalPage={categoriesData.totalPage}
+          totalPage={categories.totalPage}
           setCurrentPage={setCurrentPage}
         />
       </div>

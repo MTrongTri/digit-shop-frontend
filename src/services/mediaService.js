@@ -19,11 +19,7 @@ const upload = async (formData, onProgress) => {
     const { data } = await httpClient.post("/medias", formData, config);
     return data;
   } catch (error) {
-    if (error.response) {
-      return error.response?.data;
-    }
-
-    return error;
+    throw error;
   }
 };
 

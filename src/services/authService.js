@@ -5,11 +5,7 @@ const login = async ({ email, password }) => {
     const res = await httpClient.post("/auth/login", { email, password });
     return res.data;
   } catch (error) {
-    if (error.response) {
-      return error.response?.data;
-    }
-
-    return error;
+    throw error;
   }
 };
 
@@ -18,11 +14,7 @@ const signup = async ({ email, password }) => {
     const res = await httpClient.post("/auth/register", { email, password });
     return res.data;
   } catch (error) {
-    if (error.response) {
-      return error.response?.data;
-    }
-
-    return error;
+    throw error;
   }
 };
 
@@ -41,11 +33,7 @@ const logout = async ({ accessToken, refreshToken }) => {
 
     return res.data;
   } catch (error) {
-    if (error.response) {
-      return error.response?.data;
-    }
-
-    return error;
+    throw error;
   }
 };
 

@@ -6,30 +6,40 @@ import Select from "@/components/Input/Select/Select";
 import ModalConfirm from "@/components/Modal/ModalConfirm";
 import { getAllBrand } from "@/services/brandService";
 import { getAllCategory } from "@/services/categoryService";
-import { createProduct } from "@/services/productService";
+import { getProductById, updateProduct } from "@/services/productService";
+import { hideLoading, showLoading } from "@/stores/loadingSlice";
 import clsx from "clsx";
 import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
-import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { useNavigate, useParams } from "react-router-dom";
 
-function CreateProductPage() {
-  const [categoriesData, setCategoriesData] = useState({
+function UpdateProductPage() {
+  const [categories, setCategories] = useState({
     data: [],
     loading: false,
     error: false,
   });
-  const [brandsData, setBrandsData] = useState({
+  const [brands, setBrands] = useState({
     data: [],
     loading: false,
     error: false,
   });
+
+  const [product, setProduct] = useState({
+    data: [],
+    loading: false,
+    error: false,
+  });
+
   const [isUploading, setIsUploading] = useState(false);
   const [isOpenModal, setIsOpenModal] = useState(false);
-  const [resetPreviewImg, setResetPreviewImg] = useState(false);
-  const [productData, setProductData] = useState(null);
+  const [productUpdateData, setProductUpdateData] = useState(null);
 
   const navigate = useNavigate();
+  const { id: productId } = useParams();
+  const dispatch = useDispatch();
 
   const {
     control,
@@ -39,60 +49,87 @@ function CreateProductPage() {
   } = useForm({
     mode: "onSubmit",
     reValidateMode: "onSubmit",
-    defaultValues: {
-      images: [],
-    },
   });
 
   useEffect(() => {
     const fetchData = async () => {
-      setCategoriesData((prevState) => ({ ...prevState, loading: true }));
-      setBrandsData((prevState) => ({ ...prevState, loading: true }));
+      setCategories((prevState) => ({ ...prevState, loading: true }));
+      setBrands((prevState) => ({ ...prevState, loading: true }));
+      setProduct((prevState) => ({ ...prevState, loading: true }));
       try {
-        const { data: cateData } = await getAllCategory();
-        const { data: brandData } = await getAllBrand();
+        const { statusCode: statusCodeCate, data: cateData } =
+          await getAllCategory();
+        if (statusCodeCate === 200) {
+          setCategories({
+            data: cateData,
+            loading: false,
+            error: false,
+          });
+        }
 
-        setCategoriesData((prevState) => ({ ...prevState, data: cateData }));
-        setBrandsData((prevState) => ({ ...prevState, data: brandData }));
+        const { statusCode: statusCodeBrand, data: brandData } =
+          await getAllBrand();
+        if (statusCodeBrand === 200) {
+          setBrands({
+            data: brandData,
+            loading: false,
+            error: false,
+          });
+        }
+
+        const { statusCode: statusCodeProduct, data: productData } =
+          await getProductById(productId);
+
+        setProduct({
+          data: productData,
+          loading: false,
+          error: false,
+        });
+
+        reset({
+          name: productData.name,
+          description: productData.description,
+          price: productData.price,
+          stockQuantity: productData.stockQuantity,
+          thumbnailId: productData.thumbnail.imgId,
+          imagesId: productData.images.map((image) => image.imgId),
+          categoryId: productData.category.id,
+          brandId: productData.brand.id,
+          active: productData.isActive,
+        });
       } catch (error) {
         toast.error("Đã có lỗi xảy ra");
       } finally {
-        setCategoriesData((prevState) => ({ ...prevState, loading: false }));
-        setBrandsData((prevState) => ({ ...prevState, loading: false }));
+        setCategories((prevState) => ({ ...prevState, loading: false }));
+        setBrands((prevState) => ({ ...prevState, loading: false }));
+        setProduct((prevState) => ({ ...prevState, loading: false }));
       }
     };
 
     fetchData();
   }, []);
 
-  const onSubmit = async (formData) => {
+  const onSubmit = (formData) => {
     setIsOpenModal(true);
 
-    const { images, thumbnail: thumbnailId } = formData;
-    const imagesId = images.filter((sdImage) => !!sdImage);
-
-    delete formData.images;
-    delete formData.thumbnail;
-
-    setProductData({
-      ...formData,
-      imagesId,
-      thumbnailId,
-    });
+    const imagesId = formData.imagesId.filter((i) => !!i);
+    setProductUpdateData({ ...formData, imagesId });
   };
 
   const handleConfirm = async () => {
-    const { statusCode } = await createProduct(productData);
-
-    if (statusCode === 201) {
-      reset();
-      setResetPreviewImg(true);
-      toast.success("Đã thêm 1 sản phẩm");
-    } else {
-      toast.error("Đã có lỗi xảy ra, vui lòng thử lại");
-    }
-
+    dispatch(showLoading());
     setIsOpenModal(false);
+    try {
+      await updateProduct({
+        id: productId,
+        data: productUpdateData,
+      });
+      toast.success("Cập nhật thành công");
+    } catch (error) {
+      toast.error("Đã có lỗi xảy ra, vui lòng thử lại");
+    } finally {
+      dispatch(hideLoading());
+    }
   };
 
   const handleCancel = () => {
@@ -144,9 +181,10 @@ function CreateProductPage() {
                 control={control}
                 rules={{ required: "Vui lòng chọn danh mục sản phẩm" }}
                 className={clsx(errors.brandId && "border-red-500")}
+                defaultValue={product.data.category?.id}
               >
                 <option>Danh mục sản phẩm</option>
-                {categoriesData.data.map((cate) => (
+                {categories.data.map((cate) => (
                   <option key={cate.id} value={cate.id}>
                     {cate.name}
                   </option>
@@ -164,9 +202,10 @@ function CreateProductPage() {
                 control={control}
                 rules={{ required: "Vui lòng chọn thương hiệu" }}
                 className={clsx(errors.brandId && "border-red-500")}
+                defaultValue={product.data.brand?.id}
               >
                 <option>Thương hiệu</option>
-                {brandsData.data.map((brand) => (
+                {brands.data.map((brand) => (
                   <option key={brand.Id} value={brand.Id}>
                     {brand.name}
                   </option>
@@ -176,6 +215,17 @@ function CreateProductPage() {
               {errors.brandId && (
                 <ErrorMessage message={errors.brandId.message} />
               )}
+            </div>
+
+            <div>
+              <Select
+                name={"active"}
+                control={control}
+                defaultValue={product.data.isActive ? "true" : "false"}
+              >
+                <option value={"true"}>Đang kinh doanh</option>
+                <option value={"false"}>Ngừng kinh doanh</option>
+              </Select>
             </div>
 
             <div>
@@ -215,39 +265,43 @@ function CreateProductPage() {
               <div className="mt-2 aspect-square w-[200px]">
                 <ImgUpload
                   id="thumbnail"
-                  name="thumbnail"
+                  name="thumbnailId"
                   control={control}
                   rules={{ required: "Vui lòng chọn 1 ảnh" }}
+                  url={product.data.thumbnail?.url}
                   setIsUploading={setIsUploading}
-                  resetPreviewImg={resetPreviewImg}
-                  setResetPreviewImg={setResetPreviewImg}
-                  className={clsx(errors.thumbnail && "border-red-500")}
+                  className={clsx(errors.thumbnailId && "border-red-500")}
                   accept="image/png, image/jpg, image/jpeg"
                 />
-                {errors.thumbnail && (
-                  <ErrorMessage message={errors.thumbnail.message} />
+                {errors.thumbnailId && (
+                  <ErrorMessage message={errors.thumbnailId.message} />
                 )}
               </div>
             </div>
           </div>
 
           <div className="flex gap-6">
-            {Array.from({ length: 5 }).map((_, index) => (
-              <div key={index}>
-                <span>Ảnh {index + 1}</span>
-                <div className="mt-2 aspect-square w-[200px]">
-                  <ImgUpload
-                    id={`"images-${index}"`}
-                    name={`images.${index}`}
-                    control={control}
-                    setIsUploading={setIsUploading}
-                    resetPreviewImg={resetPreviewImg}
-                    setResetPreviewImg={setResetPreviewImg}
-                    accept="image/png, image/jpg, image/jpeg"
-                  />
+            {Array.from({ length: 5 }).map((_, index) => {
+              return (
+                <div key={index}>
+                  <span>Ảnh {index + 1}</span>
+                  <div className="mt-2 aspect-square w-[200px]">
+                    <ImgUpload
+                      id={`"images-${index}"`}
+                      name={`imagesId.${index}`}
+                      control={control}
+                      url={
+                        product.data.images
+                          ? product.data.images[index]?.url
+                          : null
+                      }
+                      setIsUploading={setIsUploading}
+                      accept="image/png, image/jpg, image/jpeg"
+                    />
+                  </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
 
           <div>
@@ -264,8 +318,8 @@ function CreateProductPage() {
 
       {isOpenModal && (
         <ModalConfirm
-          heading="Xác nhận thêm sản phẩm"
-          message="Bạn có chắn là muốn thêm 1 sản phẩm không?"
+          heading="Xác nhận cập nhật sản phẩm"
+          message="Bạn có chắn là muốn cập nhật sản phẩm này không?"
           onConfirm={handleConfirm}
           onCancel={handleCancel}
         />
@@ -274,4 +328,4 @@ function CreateProductPage() {
   );
 }
 
-export default CreateProductPage;
+export default UpdateProductPage;

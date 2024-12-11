@@ -45,6 +45,34 @@ const ImgUpload = ({
     }
   }, [url]);
 
+  const handleOnchange = async (e, field) => {
+    const files = e.target.files;
+
+    if (files[0]) {
+      setPreviewImg(URL.createObjectURL(files[0]));
+      const formData = new FormData();
+      formData.append("mediaFile", files[0]);
+
+      setIsUploading(true);
+      setDisabledButton(true);
+      const { statusCode, data } = await upload(formData, (percentage) => {
+        setUploadPercentage(percentage);
+      });
+      setIsUploading(false);
+      setDisabledButton(false);
+      setUploadPercentage(0);
+
+      if (statusCode === 201) {
+        field.onChange(data.id);
+      } else {
+        setHasErrorUpload(true);
+        toast.error("Đã có lỗi xảy ra, vui lòng thử lại");
+      }
+    }
+
+    e.target.value = null;
+  };
+
   return (
     <div className="relative flex h-full w-full items-center justify-center">
       <Controller
@@ -62,11 +90,11 @@ const ImgUpload = ({
               )}
             >
               {previewImg ? (
-                <div className="relative flex items-center justify-center">
+                <div className="relative flex h-full w-full items-center justify-center">
                   <img
                     src={previewImg}
                     alt=""
-                    className={clsx({
+                    className={clsx("h-full w-full object-cover", {
                       "opacity-20":
                         (uploadPercentage <= 100 && uploadPercentage != 0) ||
                         hasErroUpload,
@@ -94,36 +122,7 @@ const ImgUpload = ({
                 id={id}
                 type="file"
                 {...props}
-                onChange={async (e) => {
-                  const files = e.target.files;
-
-                  if (files[0]) {
-                    setPreviewImg(URL.createObjectURL(files[0]));
-                    const formData = new FormData();
-                    formData.append("mediaFile", files[0]);
-
-                    setIsUploading(true);
-                    setDisabledButton(true);
-                    const { statusCode, data } = await upload(
-                      formData,
-                      (percentage) => {
-                        setUploadPercentage(percentage);
-                      },
-                    );
-                    setIsUploading(false);
-                    setDisabledButton(false);
-                    setUploadPercentage(0);
-
-                    if (statusCode === 201) {
-                      field.onChange(data.id);
-                    } else {
-                      setHasErrorUpload(true);
-                      toast.error("Đã có lỗi xảy ra, vui lòng thử lại");
-                    }
-                  }
-
-                  e.target.value = null;
-                }}
+                onChange={(e) => handleOnchange(e, field)}
                 className="hidden"
               />
             </label>

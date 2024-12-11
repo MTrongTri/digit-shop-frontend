@@ -20,6 +20,10 @@ import ProductPage from "./pages/Admin/Product/ProductPage";
 import CreateProductPage from "./pages/Admin/Product/CreateProductPage";
 import UpdateCategoryPage from "./pages/Admin/Category/UpdateCategoryPage";
 import LoadingCircleFullScreen from "./components/Loading/LoadingCircleFullScreen";
+import UpdateProductPage from "./pages/Admin/Product/UpdateProductPage";
+import BrandsPage from "./pages/Admin/Brand/BrandsPage";
+import CreateBrandPage from "./pages/Admin/Brand/CreateBrandPage";
+import UpdateBrandPage from "./pages/Admin/Brand/UpdateBrandPage";
 
 function App() {
   return (
@@ -59,6 +63,7 @@ function App() {
           >
             <Route path="" element={<AdminDashboard />}></Route>
             <Route path="dashboard" element={<AdminDashboard />}></Route>
+
             <Route path="categories" element={<CategoriesPage />}></Route>
             <Route
               path="categories/create"
@@ -68,10 +73,22 @@ function App() {
               path="categories/update/:id"
               element={<UpdateCategoryPage />}
             ></Route>
+
             <Route path="products" element={<ProductPage />}></Route>
             <Route
               path="products/create"
               element={<CreateProductPage />}
+            ></Route>
+            <Route
+              path="products/update/:id"
+              element={<UpdateProductPage />}
+            ></Route>
+
+            <Route path="brands" element={<BrandsPage />}></Route>
+            <Route path="brands/create" element={<CreateBrandPage />}></Route>
+            <Route
+              path="brands/update/:id"
+              element={<UpdateBrandPage />}
             ></Route>
           </Route>
         </Routes>

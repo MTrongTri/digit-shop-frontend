@@ -5,11 +5,7 @@ import clsx from "clsx";
 import ErrorMessage from "@/components/Error/ErrorMessage";
 import Button from "@/components/Button/Button";
 import ImgUpload from "@/components/Input/ImgUpload";
-import {
-  createCategory,
-  getCategoryById,
-  updateCategory,
-} from "@/services/categoryService";
+import { getCategoryById, updateCategory } from "@/services/categoryService";
 import toast from "react-hot-toast";
 import { useEffect, useState } from "react";
 import ModalConfirm from "@/components/Modal/ModalConfirm";
@@ -36,17 +32,16 @@ function UpdateCategoryPage() {
 
   useEffect(() => {
     const fetchData = async () => {
-      const { statusCode, data } = await getCategoryById(cateId);
-      if (statusCode === 200) {
+      try {
+        const { data } = await getCategoryById(cateId);
         setCateData(data);
-
         reset({
           name: data.name,
           description: data.description,
           imgId: data.img?.Id,
           iconId: data.icon?.Id,
         });
-      } else {
+      } catch (error) {
         toast.error("Đã có lỗi xảy ra");
       }
     };
@@ -62,16 +57,16 @@ function UpdateCategoryPage() {
   const handleConfirm = async () => {
     dispatch(showLoading());
     setIsOpenModal(false);
-    const { statusCode } = await updateCategory({
-      id: cateId,
-      data: cateUpdateData,
-    });
-
-    dispatch(hideLoading());
-    if (statusCode === 200) {
+    try {
+      await updateCategory({
+        id: cateId,
+        data: cateUpdateData,
+      });
       toast.success("Cập nhật danh mục sản phẩm thành công");
-    } else {
+    } catch (error) {
       toast.error("Đã có lỗi xảy ra, vui lòng thử lại");
+    } finally {
+      dispatch(hideLoading());
     }
   };
 

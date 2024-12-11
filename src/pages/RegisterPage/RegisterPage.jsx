@@ -29,18 +29,21 @@ function RegisterPage() {
 
     setLoading(true);
     setErrorMessage("");
-
-    const { statusCode, code } = await signup({ email, password });
-    setLoading(false);
-
-    if (statusCode === 201) {
+    try {
+      await signup({ email, password });
+      setLoading(false);
       navigate("/login");
       toast.success("Đăng ký thành công");
-    } else if (code === 4001) {
-      setErrorMessage("Email này đã được xử dụng");
-      setFocus("email");
-    } else {
-      toast.error("Có lỗi xảy ra, vui lòng thử lại");
+    } catch (error) {
+      const errorCode = error.response?.data.errorCode;
+      if (errorCode === 4001) {
+        setErrorMessage("Email này đã được xử dụng");
+        setFocus("email");
+      } else {
+        toast.error("Có lỗi xảy ra, vui lòng thử lại");
+      }
+    } finally {
+      setLoading(false);
     }
   };
 

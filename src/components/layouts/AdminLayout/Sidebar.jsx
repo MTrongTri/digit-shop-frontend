@@ -5,6 +5,7 @@ import { MdCategory } from "react-icons/md";
 
 import { Link, useLocation } from "react-router-dom";
 import clsx from "clsx";
+import { TbBrandAppleFilled } from "react-icons/tb";
 
 const MENU_ITEMS = [
   {
@@ -21,6 +22,11 @@ const MENU_ITEMS = [
     name: "Danh mục sản phẩm",
     to: "/admin/categories",
     icon: <MdCategory />,
+  },
+  {
+    name: "Thương hiệu",
+    to: "/admin/brands",
+    icon: <TbBrandAppleFilled />,
   },
 ];
 

@@ -23,14 +23,16 @@ function Header() {
   const handleLogout = async () => {
     const accessToken = localStorage.getItem("accessToken");
     const refreshToken = localStorage.getItem("refreshToken");
-
-    const { statusCode, code } = await logout({ accessToken, refreshToken });
-    if ((statusCode >= 200 && statusCode < 400) || code === 2001) {
+    try {
+      await logout({ accessToken, refreshToken });
       toast.success("Đăng xuất thành công");
+      navigate("/login");
+    } catch (error) {
+      toast.error("Có lỗi xảy ra");
+      navigate("/login");
+    } finally {
       removeInfoLogout();
       userDispatch(setUser(null));
-
-      navigate("/login");
     }
   };
 

@@ -19,14 +19,16 @@ function PrivateAdminRoute({ children }) {
     }
 
     const fetchIntrospect = async () => {
-      const { statusCode, data } = await introspect();
+      try {
+        const { statusCode, data } = await introspect();
 
-      if (statusCode === 200 && data.roles.includes("ADMIN")) {
-        setIsAuthenticated(true);
-      } else if (!statusCode) {
-        navigate("/server-error");
-      } else {
-        navigate("/forbidden");
+        if (statusCode === 200 && data.roles.includes("ADMIN")) {
+          setIsAuthenticated(true);
+        }
+      } catch (error) {
+        if (!error.response) {
+          navigate("/server-error");
+        }
       }
 
       setIsLoading(false);
