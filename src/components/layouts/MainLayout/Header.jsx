@@ -39,7 +39,7 @@ function Header() {
   return (
     <header className="h-auto w-full bg-[#fff] py-2 font-roboto md:h-header">
       <Container>
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between px-4">
           <div>
             <Link to="/">
               <img
