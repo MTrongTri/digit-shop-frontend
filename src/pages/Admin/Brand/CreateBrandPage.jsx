@@ -4,7 +4,7 @@ import FloatingLabelInput from "@/components/Input/FloatingLabelInput";
 import ImgUpload from "@/components/Input/ImgUpload";
 import ModalConfirm from "@/components/Modal/ModalConfirm";
 import { createBrand } from "@/services/brandService";
-import { showLoading } from "@/stores/loadingSlice";
+import { hideLoading, showLoading } from "@/stores/loadingSlice";
 import clsx from "clsx";
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -44,7 +44,7 @@ function CreateBrandPage() {
     } catch (error) {
       toast.error("Đã có lỗi xảy ra, vui lòng thử lại");
     } finally {
-      dispath(showLoading());
+      dispath(hideLoading());
     }
   };
 

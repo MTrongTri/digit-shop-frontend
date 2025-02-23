@@ -1,17 +1,78 @@
 import Container from "@/components/Container";
 import ThumbsGallerySlider from "@/components/Slider/ThumbsGallerySlider";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { HiOutlineMinusSmall, HiOutlinePlusSmall } from "react-icons/hi2";
 import { FaStar } from "react-icons/fa6";
 import Pagination from "@/components/Pagination";
 import ModalRating from "./ModalRating";
 import ModalPurchase from "./ModalPurchase";
+import { getProductById } from "@/services/productService";
+import { useParams } from "react-router-dom";
+import LoadingDotsFullScreen from "@/components/Loading/LoadingDotsFullScreen";
+import clsx from "clsx";
+import { addToCart } from "@/services/cartService";
+import toast from "react-hot-toast";
 
 function ProductDetailPage() {
   const [quantityBuy, setQuantityBuy] = useState(1);
   const [currentPage, setCrrentPage] = useState(0);
-  const [openModalRating, setOpenModalating] = useState(false);
+  const [openModalRating, setOpenModalRating] = useState(false);
+  const [openModalPurchase, setOpenModalPurchase] = useState(false);
   const [contentReview, setContentReview] = useState("");
+  const [productDataBuy, setProductDataBuy] = useState({});
+  const [product, setProduct] = useState({
+    data: [],
+    loading: true,
+    error: false,
+  });
+
+  const { id: productId } = useParams();
+
+  useEffect(() => {
+    const fetchProduct = async () => {
+      setProduct((prevState) => ({ ...prevState, loading: true }));
+      try {
+        const { data } = await getProductById(productId);
+        setProduct({
+          data: data,
+          loading: false,
+          error: false,
+        });
+      } catch (error) {
+        toast.error("Đã có lỗi xảy ra");
+        setProduct((prevState) => ({ ...prevState, error: true }));
+      } finally {
+        setProduct((prevState) => ({ ...prevState, loading: false }));
+      }
+    };
+
+    fetchProduct();
+  }, []);
+
+  const handleAddToCart = async () => {
+    try {
+      const { statusCode } = await addToCart({
+        productId,
+        quantity: quantityBuy,
+      });
+      if (statusCode) {
+        toast.success("Đã thêm 1 sản phẩm vào giỏ hàng");
+      }
+    } catch (error) {
+      toast.error("Đã có lỗi xảy ra");
+      console.log(error);
+    }
+  };
+
+  const handleBuyProduct = () => {
+    setOpenModalPurchase(true);
+    setProductDataBuy({
+      product: product.data,
+      quantity: quantityBuy,
+    });
+  };
+
+  if (product.loading || product.error) return <LoadingDotsFullScreen />;
 
   return (
     <Container>
@@ -20,30 +81,39 @@ function ProductDetailPage() {
           <div className="flex flex-col gap-4 rounded-md md:flex-row md:gap-10">
             {/* Thumb gallery section */}
             <div className="md:w-[30%]">
-              <ThumbsGallerySlider />
+              <ThumbsGallerySlider
+                images={[product.data.thumbnail, ...product.data.images]}
+              />
             </div>
 
             {/* Info product section */}
             <div>
               <div className="mb-4">
-                <h2 className="text-2xl font-semibold">Diện thoại xiaomi</h2>
+                <h2 className="text-2xl font-semibold">{product.data.name}</h2>
               </div>
               <div className="font-medium text-gray-500">
                 <div className="flex items-center gap-2">
-                  <span>5</span>
+                  <span>
+                    {Math.round(product.data.averageRating * 10) / 10}
+                  </span>
                   <div className="flex items-center gap-1">
-                    <FaStar className="text-yellow-400" />
-                    <FaStar className="text-yellow-400" />
-                    <FaStar className="text-yellow-400" />
-                    <FaStar className="text-yellow-400" />
-                    <FaStar className="text-yellow-400" />
+                    {Array.from({ length: 5 }).map((_, index) => (
+                      <FaStar
+                        key={index}
+                        className={clsx(
+                          "text-sm",
+                          index < Math.round(product.data.averageRating) &&
+                            "text-yellow-400",
+                        )}
+                      />
+                    ))}
                   </div>
-                  <span>(100)</span>
+                  <span>({product.data.totalReview})</span>
                 </div>
               </div>
               <div className="mt-3">
                 <span className="text-2xl font-bold text-red-500">
-                  {Number(18000000).toLocaleString("vie")}đ
+                  {product.data.price.toLocaleString("vie")}đ
                 </span>
               </div>
 
@@ -69,32 +139,30 @@ function ProductDetailPage() {
                 </button>
               </div>
 
+              <div className="mt-4">
+                <p>Tồn kho: {product.data.stockQuantity}</p>
+              </div>
+
               <div className="mt-8 flex gap-4">
-                <button className="rounded-md bg-red-500 px-4 py-2 text-white hover:opacity-80">
+                <button
+                  className="rounded-md bg-red-500 px-4 py-2 text-white hover:opacity-80"
+                  onClick={() => handleBuyProduct()}
+                >
                   Mua ngay
                 </button>
-                <button className="rounded-md border border-primary bg-white px-4 py-2 text-primary hover:opacity-80">
+                <button
+                  className={clsx(
+                    "rounded-md border border-primary bg-white px-4 py-2 text-primary hover:opacity-80",
+                  )}
+                  onClick={() => handleAddToCart()}
+                >
                   Thêm vào giỏ hàng
                 </button>
               </div>
 
               <div className="mt-6 hidden md:block">
                 <h2 className="text-xl font-semibold">Mô tả sản phẩm</h2>
-                <p className="h-[200px]">
-                  Lorem ipsum dolor sit, amet consectetur adipisicing elit.
-                  Nesciunt at rem accusantium sed similique reiciendis, amet
-                  eos. Rerum dolorum assumenda eveniet magni perferendis totam,
-                  eum mollitia ullam quam officia, dolores aut suscipit libero
-                  animi sequi beatae inventore repellat quasi neque aspernatur
-                  amet dignissimos non tenetur! Dolorem, veritatis facilis cum
-                  hic, quae ex magni eius pariatur iusto soluta unde fugit
-                  commodi, provident harum similique illo voluptas. Minus harum
-                  ex architecto aliquam non, deleniti asperiores distinctio,
-                  repellat tempora nihil voluptatum quibusdam sed consequatur.
-                  Deserunt exercitationem, quis maxime perspiciatis officiis
-                  fuga ipsam repellendus ex velit labore numquam assumenda magni
-                  unde tempora doloremque et.
-                </p>
+                <p className="h-[200px]">{product.data.description}</p>
               </div>
             </div>
           </div>
@@ -105,13 +173,13 @@ function ProductDetailPage() {
           <div className="hidden md:block">
             <span className="text-xl font-bold">Viết đánh giá</span>
           </div>
-          <div className="col-span-10 mt-3 grid grid-flow-row gap-10 md:grid-flow-col">
-            <div className="order-2 col-span-10 md:order-1 md:col-span-6">
+          <div className="mt-3 grid gap-10 md:grid-cols-3">
+            <div className="order-2 md:order-1 md:col-span-2">
               <form
                 className="relative mb-6"
                 onSubmit={(e) => {
                   e.preventDefault();
-                  setOpenModalating(true);
+                  setOpenModalRating(true);
                 }}
               >
                 <div className="mb-4 rounded-lg rounded-t-lg border border-gray-400 bg-white px-4 py-2">
@@ -193,11 +261,16 @@ function ProductDetailPage() {
                   </div>
 
                   <div className="ml-[48px] flex gap-1">
-                    <FaStar className="text-sm text-yellow-400" />
-                    <FaStar className="text-sm text-yellow-400" />
-                    <FaStar className="text-sm text-yellow-400" />
-                    <FaStar className="text-sm text-yellow-400" />
-                    <FaStar className="text-sm text-yellow-400" />
+                    {Array.from({ length: 5 }).map((_, index) => (
+                      <FaStar
+                        key={index}
+                        className={clsx(
+                          "text-sm",
+                          index <= Math.round(product.data.averageRating) &&
+                            "text-yellow-400",
+                        )}
+                      />
+                    ))}
                   </div>
 
                   <div>
@@ -220,20 +293,20 @@ function ProductDetailPage() {
               </div>
             </div>
 
-            <div className="order-1 col-span-10 flex flex-col gap-4 rounded-md bg-white md:order-2 md:col-span-4">
-              <h2 className="font-semibold">
-                Đánh giá Điện thoại realme 13 5G 8GB/256GB
-              </h2>
+            <div className="order-1 flex flex-col gap-4 rounded-md bg-white md:order-2 md:col-span-1">
+              <h2 className="font-semibold">{product.data.name}</h2>
               <div className="flex flex-col">
                 <div className="flex items-center gap-2">
                   <FaStar className="text-xl text-yellow-400" />
                   <div>
-                    <span className="text-5xl font-bold">4.9</span>/
-                    <span>5</span>
+                    <span className="text-5xl font-bold">
+                      {Math.round(product.data.averageRating * 10) / 10}
+                    </span>
+                    /<span>5</span>
                   </div>
                 </div>
                 <div className="mt-2">
-                  <span>100 đánh giá</span>
+                  <span>{product.data.totalReview} Đánh giá</span>
                 </div>
               </div>
               <div className="">
@@ -306,11 +379,16 @@ function ProductDetailPage() {
       {/* Modal */}
       <ModalRating
         openModalRating={openModalRating}
-        setOpenModalRating={setOpenModalating}
+        setOpenModalRating={setOpenModalRating}
         contentReview={contentReview}
+        productData={product.data}
       />
 
-      <ModalPurchase />
+      <ModalPurchase
+        openModal={openModalPurchase}
+        setOpenModal={setOpenModalPurchase}
+        productDatas={[productDataBuy]}
+      />
     </Container>
   );
 }

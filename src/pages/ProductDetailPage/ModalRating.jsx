@@ -3,7 +3,12 @@ import React from "react";
 
 import { IoMdClose } from "react-icons/io";
 
-function ModalRating({ openModalRating, setOpenModalRating, contentReview }) {
+function ModalRating({
+  openModalRating,
+  setOpenModalRating,
+  contentReview,
+  productData,
+}) {
   return (
     <ModalContainer isShow={openModalRating}>
       <div className="flex h-full items-center justify-center">
@@ -22,12 +27,12 @@ function ModalRating({ openModalRating, setOpenModalRating, contentReview }) {
 
           <div className="flex flex-col gap-8">
             <img
-              src="https://res.cloudinary.com/do3fmak6r/image/upload/v1734311080/kv5ossnorqu6akqqfi4x.jpg"
+              src={productData.thumbnail.url}
               alt=""
               className="mx-auto h-[100px] w-[100px]"
             />
             <span className="mx-auto text-lg font-semibold">
-              Điện thoại Xiaomi 8GB/256GB
+              {productData.name}
             </span>
           </div>
 

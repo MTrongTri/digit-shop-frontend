@@ -7,9 +7,7 @@ import { useForm } from "react-hook-form";
 
 import { IoMdClose } from "react-icons/io";
 
-function ModalPurchase() {
-  const [showModal, setShowModal] = useState(true);
-
+function ModalPurchase({ openModal, setOpenModal, productDatas = [] }) {
   const { control, handleSubmit, register } = useForm();
 
   const handleSubmitForm = (formData) => {
@@ -17,7 +15,7 @@ function ModalPurchase() {
   };
 
   return (
-    <ModalContainer isShow={showModal}>
+    <ModalContainer isShow={openModal}>
       <div className="flex h-full">
         <div className="m-auto w-[70%] rounded-md bg-white p-4 pb-8">
           <div className="relative">
@@ -27,7 +25,7 @@ function ModalPurchase() {
 
             <button
               className="absolute right-0 top-1/2 -translate-y-1/2 p-2 pr-0"
-              onClick={() => setShowModal(false)}
+              onClick={() => setOpenModal(false)}
             >
               <IoMdClose className="text-2xl" />
             </button>
@@ -70,46 +68,34 @@ function ModalPurchase() {
                 <div className="flex h-[380px] basis-1/2 flex-col gap-8 overflow-y-auto p-3">
                   <h2 className="font-semibold">Thông tin đơn hàng</h2>
 
-                  <div className="flex items-center gap-4">
-                    <div>
-                      <img
-                        className="h-[80px] w-[80px]"
-                        src="https://cdn.tgdd.vn/Products/Images/42/323014/TimerThumb/vivo-y100-128gb-(4).jpg"
-                        alt=""
-                      />
-                    </div>
-                    <div className="flex-1">
-                      <span>Điện thoại Xiaomi</span>
-                    </div>
-                    <div>
-                      <span className="font-semibold text-red-500">
-                        10.000.000đ
-                      </span>
-                    </div>
-                    <div>
-                      <span className="font-semibold">Số lượng: 10</span>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-4">
-                    <div>
-                      <img
-                        className="h-[80px] w-[80px]"
-                        src="https://cdn.tgdd.vn/Products/Images/42/323014/TimerThumb/vivo-y100-128gb-(4).jpg"
-                        alt=""
-                      />
-                    </div>
-                    <div className="flex-1">
-                      <span>Điện thoại Xiaomi</span>
-                    </div>
-                    <div>
-                      <span className="font-semibold text-red-500">
-                        10.000.000đ
-                      </span>
-                    </div>
-                    <div>
-                      <span className="font-semibold">Số lượng: 10</span>
-                    </div>
-                  </div>
+                  {openModal &&
+                    productDatas.map((item) => (
+                      <div
+                        key={item.product.Id}
+                        className="flex items-center gap-4"
+                      >
+                        <div>
+                          <img
+                            className="h-[80px] w-[80px] object-contain"
+                            src={item.product.thumbnail.url}
+                            alt=""
+                          />
+                        </div>
+                        <div className="flex-1">
+                          <span>{item.product.name}</span>
+                        </div>
+                        <div>
+                          <span className="font-semibold text-red-500">
+                            {Number(item.product.price).toLocaleString("vie")}đ
+                          </span>
+                        </div>
+                        <div>
+                          <span className="font-semibold">
+                            Số lượng: {item.quantity}
+                          </span>
+                        </div>
+                      </div>
+                    ))}
                 </div>
               </div>
 
@@ -146,7 +132,16 @@ function ModalPurchase() {
 
               <div className="mt-6 flex gap-4 p-3">
                 <p className="text-xl font-semibold">
-                  Tổng giá trị đơn hàng: 10.000.000đ
+                  Tổng giá trị đơn hàng:{" "}
+                  {openModal &&
+                    productDatas
+                      .reduce(
+                        (total, curr) =>
+                          total + curr.product.price * curr.quantity,
+                        0,
+                      )
+                      .toLocaleString("vie")}
+                  đ
                 </p>
               </div>
 
