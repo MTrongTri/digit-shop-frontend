@@ -24,6 +24,7 @@ import UpdateProductPage from "./pages/Admin/Product/UpdateProductPage";
 import BrandsPage from "./pages/Admin/Brand/BrandsPage";
 import CreateBrandPage from "./pages/Admin/Brand/CreateBrandPage";
 import UpdateBrandPage from "./pages/Admin/Brand/UpdateBrandPage";
+import ScrollTop from "./components/ScrollTop";
 
 function App() {
   return (
@@ -31,6 +32,7 @@ function App() {
       <Toaster />
       <LoadingCircleFullScreen />
       <BrowserRouter>
+        <ScrollTop />
         <Routes>
           <Route element={<AuthLayout />}>
             <Route path="/login" element={<LoginPage />}></Route>

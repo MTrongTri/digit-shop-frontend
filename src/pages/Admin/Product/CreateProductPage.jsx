@@ -95,10 +95,6 @@ function CreateProductPage() {
     setIsOpenModal(false);
   };
 
-  const handleCancel = () => {
-    setIsOpenModal(false);
-  };
-
   return (
     <div>
       <div className="mt-10">
@@ -262,14 +258,13 @@ function CreateProductPage() {
         </form>
       </div>
 
-      {isOpenModal && (
-        <ModalConfirm
-          heading="Xác nhận thêm sản phẩm"
-          message="Bạn có chắn là muốn thêm 1 sản phẩm không?"
-          onConfirm={handleConfirm}
-          onCancel={handleCancel}
-        />
-      )}
+      <ModalConfirm
+        heading="Xác nhận thêm sản phẩm"
+        message="Bạn có chắn là muốn thêm 1 sản phẩm không?"
+        isShow={isOpenModal}
+        setIsShow={setIsOpenModal}
+        onConfirm={handleConfirm}
+      />
     </div>
   );
 }

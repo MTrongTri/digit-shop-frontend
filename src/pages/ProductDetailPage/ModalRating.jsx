@@ -9,8 +9,10 @@ function ModalRating({
   contentReview,
   productData,
 }) {
+  if (!openModalRating) return;
+
   return (
-    <ModalContainer isShow={openModalRating}>
+    <ModalContainer>
       <div className="flex h-full items-center justify-center">
         <div className="flex w-[680px] flex-col gap-5 rounded-lg bg-white p-6">
           <div className="relative">

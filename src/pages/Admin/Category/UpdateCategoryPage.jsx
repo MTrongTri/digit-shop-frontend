@@ -70,10 +70,6 @@ function UpdateCategoryPage() {
     }
   };
 
-  const handleCancel = () => {
-    setIsOpenModal(false);
-  };
-
   return (
     <div>
       <div className="mt-10">
@@ -160,14 +156,13 @@ function UpdateCategoryPage() {
         </form>
       </div>
 
-      {isOpenModal && (
-        <ModalConfirm
-          heading="Xác nhận chỉnh sửa danh mục sản phẩm"
-          message="Bạn có chắn là muốn cập nhật danh mục sản phẩm này không?"
-          onConfirm={handleConfirm}
-          onCancel={handleCancel}
-        />
-      )}
+      <ModalConfirm
+        heading="Xác nhận chỉnh sửa danh mục sản phẩm"
+        message="Bạn có chắn là muốn cập nhật danh mục sản phẩm này không?"
+        isShow={isOpenModal}
+        setIsShow={setIsOpenModal}
+        onConfirm={handleConfirm}
+      />
     </div>
   );
 }

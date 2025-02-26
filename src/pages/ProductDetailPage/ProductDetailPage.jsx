@@ -12,6 +12,8 @@ import LoadingDotsFullScreen from "@/components/Loading/LoadingDotsFullScreen";
 import clsx from "clsx";
 import { addToCart } from "@/services/cartService";
 import toast from "react-hot-toast";
+import { useDispatch } from "react-redux";
+import { countCartItemFetch } from "@/stores/cartSlice";
 
 function ProductDetailPage() {
   const [quantityBuy, setQuantityBuy] = useState(1);
@@ -19,12 +21,13 @@ function ProductDetailPage() {
   const [openModalRating, setOpenModalRating] = useState(false);
   const [openModalPurchase, setOpenModalPurchase] = useState(false);
   const [contentReview, setContentReview] = useState("");
-  const [productDataBuy, setProductDataBuy] = useState({});
+  const [productDataBuy, setProductDataBuy] = useState();
   const [product, setProduct] = useState({
     data: [],
     loading: true,
     error: false,
   });
+  const dispatch = useDispatch();
 
   const { id: productId } = useParams();
 
@@ -57,10 +60,11 @@ function ProductDetailPage() {
       });
       if (statusCode) {
         toast.success("Đã thêm 1 sản phẩm vào giỏ hàng");
+        dispatch(countCartItemFetch());
       }
     } catch (error) {
       toast.error("Đã có lỗi xảy ra");
-      console.log(error);
+      console.error(error);
     }
   };
 

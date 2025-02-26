@@ -48,10 +48,6 @@ function CreateBrandPage() {
     }
   };
 
-  const handleCancel = () => {
-    setIsOpenModal(false);
-  };
-
   return (
     <div>
       <div className="mt-10">
@@ -105,14 +101,14 @@ function CreateBrandPage() {
         </form>
       </div>
 
-      {isOpenModal && (
-        <ModalConfirm
-          heading="Xác nhận thêm thương hiệu"
-          message="Bạn có chắn là muốn thêm 1 thương hiệu không?"
-          onConfirm={handleConfirm}
-          onCancel={handleCancel}
-        />
-      )}
+      {/* Modal */}
+      <ModalConfirm
+        heading="Xác nhận thêm thương hiệu"
+        message="Bạn có chắn là muốn thêm 1 thương hiệu không?"
+        isShow={isOpenModal}
+        setIsShow={setIsOpenModal}
+        onConfirm={handleConfirm}
+      />
     </div>
   );
 }

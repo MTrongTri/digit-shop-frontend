@@ -54,7 +54,7 @@ function Categories() {
               <Link to="/">
                 <div>
                   <img
-                    className="aspect-square w-full object-cover p-3"
+                    className="aspect-square w-full object-contain p-3"
                     src={item.imgUrl}
                     alt="img category"
                   />

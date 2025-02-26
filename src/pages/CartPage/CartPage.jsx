@@ -1,50 +1,131 @@
 import Container from "@/components/Container";
-import { useState } from "react";
+import LoadingDotsFullScreen from "@/components/Loading/LoadingDotsFullScreen";
+import ModalConfirm from "@/components/Modal/ModalConfirm";
+import { images } from "@/constants";
+import {
+  deleteCartItemsByProductIds,
+  getCartItems,
+  updateQuantityCartItem,
+} from "@/services/cartService";
+import { countCartItemFetch } from "@/stores/cartSlice";
+import { useEffect, useState } from "react";
+import toast, { Toaster } from "react-hot-toast";
 import { FaRegTrashCan } from "react-icons/fa6";
 import { HiMinusSmall, HiPlusSmall } from "react-icons/hi2";
+import { useDispatch } from "react-redux";
+import { Link } from "react-router-dom";
 
 function CartPage() {
-  const [cartItems, setCartItems] = useState([
-    {
-      id: 1,
-      imgUrl:
-        "https://res.cloudinary.com/do3fmak6r/image/upload/v1734311080/kv5ossnorqu6akqqfi4x.jpg",
-      name: "Điện thoại Xiaomi 8GB/256GB",
-      quantity: 1,
-      price: 1000000,
-      isSelected: false,
-    },
-    {
-      id: 2,
-      imgUrl:
-        "https://res.cloudinary.com/do3fmak6r/image/upload/v1734311080/kv5ossnorqu6akqqfi4x.jpg",
-      name: "Điện thoại Xiaomi 8GB/256GB",
-      quantity: 2,
-      price: 1000000,
-      isSelected: false,
-    },
-  ]);
+  const [cartItems, setCartItems] = useState(null);
+  const [cartLoading, setCartLoading] = useState(false);
+  const [reloadCartItems, setReloadCartItems] = useState(false);
+  const [openModalDeleteCartItem, setOpenModalDeleteCartItem] = useState(false);
+  const [itemSelectedIds, setItemSelectedIds] = useState([]);
+  const dispatch = useDispatch();
 
-  const totalPrice = cartItems.reduce(
+  const totalPrice = cartItems?.reduce(
     (total, item) =>
-      item.isSelected ? total + item.price * item.quantity : total,
+      itemSelectedIds.includes(item.productId)
+        ? total + item.price * item.quantity
+        : total,
     0,
   );
 
-  const handleSelectAll = (event) => {
-    const updatedCart = cartItems.map((item) => ({
-      ...item,
-      isSelected: event.target.checked,
-    }));
-    setCartItems(updatedCart);
+  useEffect(() => {
+    const fetchCartItems = async () => {
+      setCartLoading(true);
+      try {
+        const { statusCode, data } = await getCartItems();
+        if (statusCode === 201) {
+          setCartItems(data);
+        }
+      } catch (error) {
+        console.error(error);
+        toast.error("Đã có lỗi xảy ra");
+        setCartLoading(true);
+      } finally {
+        setCartLoading(false);
+      }
+    };
+
+    fetchCartItems();
+  }, [reloadCartItems]);
+
+  const toggleItemSelectionAll = (event) => {
+    setItemSelectedIds(
+      event.target.checked ? cartItems.map((item) => item.productId) : [],
+    );
   };
 
-  const handleSelectItem = (event, itemId) => {
-    const updatedCart = cartItems.map((item) =>
-      item.id === itemId ? { ...item, isSelected: event.target.checked } : item,
-    );
-    setCartItems(updatedCart);
+  const toggleItemSelection = (event, productId) => {
+    if (event.target.checked) {
+      setItemSelectedIds((prevState) => [...prevState, productId]);
+    } else {
+      setItemSelectedIds((prevState) =>
+        prevState.filter((id) => id != productId),
+      );
+    }
   };
+
+  const handleUpdateQuantity = async (productId, quantityChange = 0) => {
+    const currQuantity = cartItems.find(
+      (item) => item.productId === productId,
+    ).quantity;
+
+    try {
+      await updateQuantityCartItem({
+        productId,
+        quantity: currQuantity + quantityChange,
+      });
+      setReloadCartItems((prev) => !prev);
+    } catch (error) {
+      console.error(error);
+      toast.error("Có lỗi xảy ra");
+    }
+  };
+
+  const handleOpenModalDeleteCartItems = () => {
+    if (!itemSelectedIds.length) {
+      toast.error("Vui lòng chọn sản phẩm cần xóa");
+      return;
+    }
+    setOpenModalDeleteCartItem(true);
+  };
+
+  const handleConfirmDeleteCartItem = async () => {
+    try {
+      const res = await deleteCartItemsByProductIds(itemSelectedIds);
+      if (res.statusCode === 201) {
+        toast.success("Xóa thành công");
+        dispatch(countCartItemFetch());
+        setReloadCartItems((prevState) => !prevState);
+        setItemSelectedIds([]);
+      }
+    } catch (error) {
+      console.error(error);
+      toast.error("Có lỗi xảy ra, vui lòng thử lại");
+    } finally {
+      setOpenModalDeleteCartItem(false);
+    }
+  };
+
+  if (cartLoading) return <LoadingDotsFullScreen />;
+
+  if (cartItems?.length === 0)
+    return (
+      <Container>
+        <div className="mt-4 bg-white p-10">
+          <div className="flex">
+            <img src={images.EmptyCart} alt="" className="m-auto" />
+          </div>
+          <div>
+            <p className="text-center font-semibold text-gray-600">
+              Hiện chưa có sản phẩm nào trong giỏ hàng
+            </p>
+          </div>
+        </div>
+      </Container>
+    );
 
   return (
     <Container>
@@ -66,8 +147,8 @@ function CartPage() {
                   <input
                     type="checkbox"
                     id="select-all"
-                    checked={cartItems.every((item) => item.isSelected)}
-                    onChange={handleSelectAll}
+                    checked={itemSelectedIds.length === cartItems?.length}
+                    onChange={toggleItemSelectionAll}
                     className="h-[20px] w-[20px]"
                   />
                   <span>Tất cả</span>
@@ -76,7 +157,10 @@ function CartPage() {
                 <span className="col-span-1 hidden md:block">Số lượng</span>
                 <span className="col-span-1 hidden md:block">Thành tiền</span>
                 <div className="col-span-1 flex justify-center">
-                  <button className="hover:text-red-500">
+                  <button
+                    className="hover:text-red-500"
+                    onClick={handleOpenModalDeleteCartItems}
+                  >
                     <FaRegTrashCan />
                   </button>
                 </div>
@@ -84,9 +168,9 @@ function CartPage() {
 
               {/* Items List */}
               <div className="mt-3 flex max-h-[420px] flex-col gap-8 overflow-y-auto rounded-lg bg-white px-4 py-6">
-                {cartItems.map((item) => (
+                {cartItems?.map((item) => (
                   <div
-                    key={item.id}
+                    key={item.productId}
                     className="grid grid-cols-7 items-center gap-2"
                   >
                     {/* Item Details */}
@@ -94,35 +178,48 @@ function CartPage() {
                       <label>
                         <input
                           type="checkbox"
-                          checked={item.isSelected}
-                          onChange={(e) => handleSelectItem(e, item.id)}
+                          checked={itemSelectedIds.includes(item.productId)}
+                          onChange={(e) =>
+                            toggleItemSelection(e, item.productId)
+                          }
                           className="h-[20px] w-[20px]"
                         />
                       </label>
                       <img
-                        src={item.imgUrl}
+                        src={item.thumbnailUrl}
                         alt="Product"
-                        className="h-[80px] w-[80px]"
+                        className="h-[80px] w-[80px] object-contain"
                       />
-                      <a
-                        href="#"
+                      <Link
+                        to={`/products/${item.productId}`}
                         className="line-clamp-2 flex-1 text-sm hover:text-primary"
                       >
                         {item.name}
-                      </a>
+                      </Link>
                     </div>
-                    <div className="col-span-1 hidden md:block">
+                    <div className="col-span-1 hidden text-gray-700 md:block">
                       {item.price.toLocaleString("vi-VN")}đ
                     </div>
                     <div className="md:justify-startst col-span-2 flex justify-end md:col-span-1 md:justify-start">
                       <div className="flex gap-1">
-                        <button className="flex h-[30px] w-[30px] items-center justify-center rounded-sm border border-gray-500">
+                        <button
+                          disabled={item.quantity === 1}
+                          className="flex h-[30px] w-[30px] items-center justify-center rounded-sm border border-gray-300 disabled:cursor-not-allowed"
+                          onClick={() =>
+                            handleUpdateQuantity(item.productId, -1)
+                          }
+                        >
                           <HiMinusSmall />
                         </button>
-                        <span className="flex h-[30px] w-[30px] items-center justify-center rounded-sm border border-gray-500 text-sm">
+                        <span className="flex h-[30px] w-[30px] items-center justify-center rounded-sm border border-gray-300 text-sm">
                           {item.quantity}
                         </span>
-                        <button className="flex h-[30px] w-[30px] items-center justify-center rounded-sm border border-gray-500">
+                        <button
+                          className="flex h-[30px] w-[30px] items-center justify-center rounded-sm border border-gray-300"
+                          onClick={() =>
+                            handleUpdateQuantity(item.productId, 1)
+                          }
+                        >
                           <HiPlusSmall />
                         </button>
                       </div>
@@ -131,7 +228,13 @@ function CartPage() {
                       {(item.price * item.quantity).toLocaleString("vi-VN")}đ
                     </div>
                     <div className="col-span-1 flex justify-end md:justify-center">
-                      <button className="hover:text-red-500">
+                      <button
+                        className="hover:text-red-500"
+                        onClick={() => {
+                          setOpenModalDeleteCartItem(true);
+                          setItemSelectedIds([item.productId]);
+                        }}
+                      >
                         <FaRegTrashCan />
                       </button>
                     </div>
@@ -146,7 +249,9 @@ function CartPage() {
                 <div className="flex flex-col gap-3 text-gray-500">
                   <div className="flex justify-between">
                     <span>Tạm tính</span>
-                    <span>{totalPrice.toLocaleString("vie")}đ</span>
+                    <span>
+                      {totalPrice ? totalPrice.toLocaleString("vie") : 0}đ
+                    </span>
                   </div>
                   <div className="flex justify-between">
                     <span>Giảm giá</span>
@@ -160,13 +265,13 @@ function CartPage() {
                   <div className="flex items-center justify-between">
                     <span className="font-semibold">Tổng tiền thanh toán</span>
                     <span className="text-xl font-bold text-red-500">
-                      {totalPrice.toLocaleString("vi-VN")}đ
+                      {totalPrice ? totalPrice.toLocaleString("vie") : 0}đ
                     </span>
                   </div>
 
                   <div className="mt-8">
                     <button className="w-full rounded-md bg-red-500 py-2 text-white">
-                      Mua hàng ({cartItems.filter((i) => i.isSelected).length})
+                      Mua hàng ({itemSelectedIds.length})
                     </button>
                   </div>
                 </div>
@@ -175,6 +280,15 @@ function CartPage() {
           </div>
         </div>
       </div>
+
+      {/* Modal */}
+      <ModalConfirm
+        heading="Xóa sản phẩm khỏi giỏ hàng"
+        message="Bạn có chắc muốn xóa sản phẩm này khỏi giỏ hàng không?"
+        isShow={openModalDeleteCartItem}
+        setIsShow={setOpenModalDeleteCartItem}
+        onConfirm={handleConfirmDeleteCartItem}
+      />
     </Container>
   );
 }

@@ -14,6 +14,9 @@ import toast from "react-hot-toast";
 import { removeInfoLogout } from "@/utils/localStorage";
 import { setUser } from "@/stores/userSlice";
 import { getAllUser } from "@/services/userService";
+import { useEffect } from "react";
+import { countCartItem } from "@/services/cartService";
+import { updateTotalItem } from "@/stores/cartSlice";
 
 function Header() {
   const navigate = useNavigate();
@@ -91,7 +94,7 @@ function Header() {
                   </li>
                   <li className="px-3 py-2 hover:bg-gray-100">
                     <button
-                      className="flex items-center gap-2"
+                      className="flex w-full items-center gap-2"
                       onClick={handleLogout}
                     >
                       <IoLogOut className="text-[16px]" />
@@ -100,7 +103,7 @@ function Header() {
                   </li>
                   <li className="px-3 py-2 hover:bg-gray-100">
                     <button
-                      className="flex items-center gap-2"
+                      className="flex w-full items-center gap-2"
                       onClick={() => getAllUser()}
                     >
                       <IoLogOut className="text-[16px]" />

@@ -81,16 +81,11 @@ function UpdateBrandPage() {
     }
   };
 
-  const handleCancel = () => {
-    setIsOpenModal(false);
-  };
-
   return (
     <div>
       <div className="mt-10">
         <h2 className="text-2xl font-bold">Thương hiệu</h2>
       </div>
-
       <div className="mt-6 h-[540px] overflow-y-auto bg-white p-8">
         <form
           onSubmit={handleSubmit(onSubmit)}
@@ -137,14 +132,14 @@ function UpdateBrandPage() {
         </form>
       </div>
 
-      {isOpenModal && (
-        <ModalConfirm
-          heading="Xác nhận cập nhật"
-          message="Bạn có chắn là muốn cập nhật thương hiệu này không?"
-          onConfirm={handleConfirm}
-          onCancel={handleCancel}
-        />
-      )}
+      {/* Modal */}
+      <ModalConfirm
+        heading="Xác nhận cập nhật"
+        message="Bạn có chắn là muốn cập nhật thương hiệu này không?"
+        isShow={isOpenModal}
+        setIsShow={setIsOpenModal}
+        onConfirm={handleConfirm}
+      />
     </div>
   );
 }

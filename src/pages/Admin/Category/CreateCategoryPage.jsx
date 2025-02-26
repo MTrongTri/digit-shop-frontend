@@ -49,10 +49,6 @@ function CreateCategoryPage() {
     }
   };
 
-  const handleCancel = () => {
-    setIsOpenModal(false);
-  };
-
   return (
     <div>
       <div className="mt-10">
@@ -137,14 +133,14 @@ function CreateCategoryPage() {
         </form>
       </div>
 
-      {isOpenModal && (
-        <ModalConfirm
-          heading="Xác nhận thêm danh mục sản phẩm"
-          message="Bạn có chắn là muốn thêm 1 danh mục sản phẩm không?"
-          onConfirm={handleConfirm}
-          onCancel={handleCancel}
-        />
-      )}
+      {/* Modal */}
+      <ModalConfirm
+        heading="Xác nhận thêm danh mục sản phẩm"
+        message="Bạn có chắn là muốn thêm 1 danh mục sản phẩm không?"
+        isShow={isOpenModal}
+        setIsShow={setIsOpenModal}
+        onConfirm={handleConfirm}
+      />
     </div>
   );
 }
