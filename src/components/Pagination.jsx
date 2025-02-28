@@ -26,6 +26,7 @@ function Pagination({ totalPage, currentPage, setCurrentPage }) {
         onPageChange={({ selected }) => setCurrentPage(selected)}
         pageRangeDisplayed={2}
         pageCount={totalPage}
+        initialPage={currentPage}
         renderOnZeroPageCount={null}
         containerClassName="flex gap-2 items-center"
         pageLinkClassName="w-10 h-10 flex items-center justify-center rounded-full hover:bg-primary hover:text-white"

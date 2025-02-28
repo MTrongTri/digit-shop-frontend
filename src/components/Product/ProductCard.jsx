@@ -32,7 +32,7 @@ function ProductCard({ data }) {
           <div className="flex items-center gap-2 text-sm">
             <FaStar className="text-[#ffc400]" />
             <span>
-              {data.averageRating} ({data.totalReview})
+              {Math.round(data.averageRating * 10) / 10} ({data.totalReview})
             </span>
           </div>
         </div>
