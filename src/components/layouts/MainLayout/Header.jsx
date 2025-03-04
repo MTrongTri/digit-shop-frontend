@@ -1,22 +1,19 @@
-import { Link, useNavigate } from "react-router-dom";
-import { images } from "@/constants";
+import Cart from "@/components/layouts/MainLayout/Cart";
 import NavBar from "@/components/layouts/MainLayout/NavBar";
 import Search from "@/components/layouts/MainLayout/Search";
-import Cart from "@/components/layouts/MainLayout/Cart";
+import { images } from "@/constants";
+import { Link, useNavigate } from "react-router-dom";
 
 import { FaUser } from "react-icons/fa";
-import { IoSettingsSharp, IoLogOut } from "react-icons/io5";
+import { IoLogOut, IoSettingsSharp } from "react-icons/io5";
 
 import Container from "@/components/Container";
-import { useDispatch, useSelector } from "react-redux";
 import { logout } from "@/services/authService";
-import toast from "react-hot-toast";
-import { removeInfoLogout } from "@/utils/localStorage";
-import { setUser } from "@/stores/userSlice";
 import { getAllUser } from "@/services/userService";
-import { useEffect } from "react";
-import { countCartItem } from "@/services/cartService";
-import { updateTotalItem } from "@/stores/cartSlice";
+import { setUser } from "@/stores/userSlice";
+import { removeInfoLogout } from "@/utils/localStorage";
+import toast from "react-hot-toast";
+import { useDispatch, useSelector } from "react-redux";
 
 function Header() {
   const navigate = useNavigate();

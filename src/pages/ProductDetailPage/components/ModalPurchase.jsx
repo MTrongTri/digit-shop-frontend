@@ -1,8 +1,7 @@
 import FloatingLabelInput from "@/components/Input/FloatingLabelInput";
 import FloatingLabelInputNumber from "@/components/Input/FloatingLabelInputNumber";
 import ModalContainer from "@/components/Modal/ModalContainer";
-import { images } from "@/constants";
-import React, { useState } from "react";
+import React from "react";
 import { useForm } from "react-hook-form";
 
 import { IoMdClose } from "react-icons/io";

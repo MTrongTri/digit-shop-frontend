@@ -15,7 +15,7 @@ function HomePage() {
   const [currentPage, setCurrentPage] = useState(0);
   const [productData, setProductData] = useState({
     products: [],
-    totalPage: 0,
+    totalPage: 1,
     loading: false,
   });
   const navigate = useNavigate();

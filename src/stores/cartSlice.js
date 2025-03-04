@@ -1,6 +1,5 @@
 import { countCartItem } from "@/services/cartService";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { MdTry } from "react-icons/md";
 
 const initialState = {
   totalItem: 0,
@@ -39,7 +38,5 @@ export const cartSlice = createSlice({
       });
   },
 });
-
-export const { updateTotalItem } = cartSlice.actions;
 
 export default cartSlice.reducer;

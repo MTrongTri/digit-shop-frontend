@@ -1,6 +1,10 @@
-import React from "react";
+import React, { useState } from "react";
+import ModalRating from "./ModalRating";
 
-function FormReview({ setContentReview, setOpenModalRating }) {
+function FormReview({ product }) {
+  const [contentReview, setContentReview] = useState("");
+  const [openModalRating, setOpenModalRating] = useState(false);
+
   return (
     <div>
       <form
@@ -27,6 +31,15 @@ function FormReview({ setContentReview, setOpenModalRating }) {
           Đăng
         </button>
       </form>
+
+      {/* Modal */}
+      <ModalRating
+        openModalRating={openModalRating}
+        setOpenModalRating={setOpenModalRating}
+        contentReview={contentReview}
+        setContentReview={setContentReview}
+        product={product}
+      />
     </div>
   );
 }

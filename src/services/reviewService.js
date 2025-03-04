@@ -60,4 +60,26 @@ const deleteReview = async (id) => {
   }
 };
 
-export { getReviewsPage, getReviewsStar, createReview, deleteReview };
+const updateReview = async ({ id, comment, rating }) => {
+  try {
+    const res = await httpClient.put(`/product_reviews/${id}`, {
+      comment,
+      rating,
+    });
+    return res.data;
+  } catch (error) {
+    if (error.response) {
+      return error.response?.data;
+    }
+
+    return error;
+  }
+};
+
+export {
+  getReviewsPage,
+  getReviewsStar,
+  createReview,
+  deleteReview,
+  updateReview,
+};

@@ -11,26 +11,21 @@ import { FaStar } from "react-icons/fa6";
 import { HiOutlineMinusSmall, HiOutlinePlusSmall } from "react-icons/hi2";
 import { useDispatch } from "react-redux";
 import { useParams } from "react-router-dom";
-import FormReview from "./FormReview";
-import ModalPurchase from "./ModalPurchase";
-import ModalRating from "./ModalRating";
-import ReviewProductStar from "./ReviewProductStar";
-import ReviewCommentSection from "./ReviewCommentSection";
+import ModalPurchase from "./components/ModalPurchase";
+import ModalRating from "./components/ModalRating";
+import ReviewProductStar from "./components/ReviewProductStar";
+import ReviewCommentSection from "./components/ReviewCommentSection";
+import FormReview from "./components/FormReview";
 
 function ProductDetailPage() {
   const [quantityBuy, setQuantityBuy] = useState(1);
-  const [contentReview, setContentReview] = useState("");
-  const [openModalRating, setOpenModalRating] = useState(false);
   const [openModalPurchase, setOpenModalPurchase] = useState(false);
   const [productDataBuy, setProductDataBuy] = useState();
-  const [reloadComment, setReloadComment] = useState(false);
   const [product, setProduct] = useState({
     data: [],
     loading: true,
     error: false,
   });
-
-  const [currentPage, setCurrentPage] = useState(0);
 
   const dispatch = useDispatch();
 
@@ -180,17 +175,11 @@ function ProductDetailPage() {
           <div className="mt-3 grid gap-10 md:grid-cols-3">
             <div className="order-2 md:order-1 md:col-span-2">
               <div>
-                <FormReview
-                  setContentReview={setContentReview}
-                  setOpenModalRating={setOpenModalRating}
-                />
+                <FormReview product={product.data} />
               </div>
 
               <div id="comment-section">
-                <ReviewCommentSection
-                  reloadComment={reloadComment}
-                  setReloadComment={setReloadComment}
-                />
+                <ReviewCommentSection productId={productId} />
               </div>
             </div>
 
@@ -202,14 +191,6 @@ function ProductDetailPage() {
       </div>
 
       {/* Modal */}
-      <ModalRating
-        openModalRating={openModalRating}
-        setOpenModalRating={setOpenModalRating}
-        contentReview={contentReview}
-        productData={product.data}
-        setReloadComment={setReloadComment}
-      />
-
       <ModalPurchase
         openModal={openModalPurchase}
         setOpenModal={setOpenModalPurchase}

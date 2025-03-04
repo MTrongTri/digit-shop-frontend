@@ -1,36 +1,51 @@
 import ModalContainer from "@/components/Modal/ModalContainer";
 import { createReview } from "@/services/reviewService";
+import { hideLoading, showLoading } from "@/stores/loadingSlice";
+import { fetchReviews } from "@/stores/reviewSlice";
 import React, { useState } from "react";
 import toast from "react-hot-toast";
 
 import { IoMdClose } from "react-icons/io";
-import { useNavigate, useParams } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
 
 function ModalRating({
   openModalRating,
   setOpenModalRating,
   contentReview,
-  productData,
-  setReloadComment,
+  setContentReview,
+  product,
 }) {
   const [rating, setRating] = useState(1);
+  const { currentPage } = useSelector((state) => state.review);
+  const dispatch = useDispatch();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const data = { productId: productData.Id, rating, comment: contentReview };
+    const data = { productId: product.Id, rating, comment: contentReview };
     try {
+      dispatch(showLoading());
       const res = await createReview(data);
+
       if (res.statusCode >= 100 && res.statusCode < 400) {
         setOpenModalRating(false);
-        setReloadComment((prevState) => !prevState);
+        dispatch(
+          fetchReviews({
+            pageNo: currentPage,
+            pageSize: 4,
+            productId: product.Id,
+          }),
+        );
         document
           .getElementById("comment-section")
           .scrollIntoView({ behavior: "smooth", block: "start" });
+        setContentReview("");
         toast.success("Đã đánh giá sản phẩm");
       }
     } catch (error) {
       console.error(error);
       toast.error("Có lỗi xảy ra xin vui lòng thử lại");
+    } finally {
+      dispatch(hideLoading());
     }
   };
 
@@ -54,12 +69,12 @@ function ModalRating({
 
           <div className="flex flex-col gap-8">
             <img
-              src={productData.thumbnail.url}
-              alt={productData.name}
+              src={product.thumbnail.url}
+              alt={product.name}
               className="mx-auto h-[100px] w-[100px] object-contain"
             />
             <span className="mx-auto text-lg font-semibold">
-              {productData.name}
+              {product.name}
             </span>
           </div>
 
