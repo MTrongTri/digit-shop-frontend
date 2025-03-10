@@ -9,19 +9,21 @@ import {
 } from "@/services/cartService";
 import { countCartItemFetch } from "@/stores/cartSlice";
 import { useEffect, useState } from "react";
-import toast, { Toaster } from "react-hot-toast";
+import toast from "react-hot-toast";
 import { FaRegTrashCan } from "react-icons/fa6";
 import { HiMinusSmall, HiPlusSmall } from "react-icons/hi2";
 import { useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
+import ModalPurchase from "../ProductDetailPage/components/ModalPurchase";
 
 function CartPage() {
-  const [cartItems, setCartItems] = useState(null);
+  const [cartItems, setCartItems] = useState([]);
   const [cartLoading, setCartLoading] = useState(false);
   const [reloadCartItems, setReloadCartItems] = useState(false);
   const [openModalDeleteCartItem, setOpenModalDeleteCartItem] = useState(false);
   const [itemSelectedIds, setItemSelectedIds] = useState([]);
   const dispatch = useDispatch();
+  const [openModalPurchase, setOpenModalPurchase] = useState(false);
 
   const totalPrice = cartItems?.reduce(
     (total, item) =>
@@ -29,6 +31,10 @@ function CartPage() {
         ? total + item.price * item.quantity
         : total,
     0,
+  );
+
+  const productBuys = cartItems.filter((item) =>
+    new Set(itemSelectedIds).has(item.productId),
   );
 
   useEffect(() => {
@@ -270,7 +276,11 @@ function CartPage() {
                   </div>
 
                   <div className="mt-8">
-                    <button className="w-full rounded-md bg-red-500 py-2 text-white">
+                    <button
+                      disabled={itemSelectedIds.length == 0}
+                      className="w-full rounded-md bg-red-500 py-2 text-white disabled:opacity-70"
+                      onClick={() => setOpenModalPurchase(true)}
+                    >
                       Mua hàng ({itemSelectedIds.length})
                     </button>
                   </div>
@@ -288,6 +298,11 @@ function CartPage() {
         isShow={openModalDeleteCartItem}
         setIsShow={setOpenModalDeleteCartItem}
         onConfirm={handleConfirmDeleteCartItem}
+      />
+      <ModalPurchase
+        openModal={openModalPurchase}
+        setOpenModal={setOpenModalPurchase}
+        products={productBuys}
       />
     </Container>
   );

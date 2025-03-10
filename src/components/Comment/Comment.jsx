@@ -80,7 +80,7 @@ function Comment({ data }) {
         </p>
       </div>
 
-      {userState.id === data.user.id && (
+      {userState?.id === data.user.id && (
         <div className="ml-[48px] mt-2 flex gap-3">
           <button
             className="tooltip"

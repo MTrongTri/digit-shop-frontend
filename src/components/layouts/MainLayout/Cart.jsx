@@ -9,9 +9,12 @@ import { countCartItemFetch } from "@/stores/cartSlice";
 function Cart() {
   const dispatch = useDispatch();
   const { totalItem } = useSelector((state) => state.cart);
+  const userState = useSelector((state) => state.user.userInfo);
 
   useEffect(() => {
-    dispatch(countCartItemFetch());
+    if (userState) {
+      dispatch(countCartItemFetch());
+    }
   }, []);
 
   return (

@@ -25,6 +25,7 @@ import BrandsPage from "./pages/Admin/Brand/BrandsPage";
 import CreateBrandPage from "./pages/Admin/Brand/CreateBrandPage";
 import UpdateBrandPage from "./pages/Admin/Brand/UpdateBrandPage";
 import ScrollTop from "./components/ScrollTop";
+import OrderStatusPage from "./pages/OrderPage/OrderStatusPage";
 
 function App() {
   return (
@@ -50,6 +51,14 @@ function App() {
                 </PrivateRoute>
               }
             ></Route>
+
+            <Route path="/orders">
+              <Route
+                path=":orderId/status"
+                element={<OrderStatusPage />}
+              ></Route>
+            </Route>
+
             <Route path="/forbidden" element={<ForbiddenPage />}></Route>
             <Route path="/server-error" element={<ServerErrorPage />}></Route>
             <Route path="*" element={<NotFoundPage />}></Route>

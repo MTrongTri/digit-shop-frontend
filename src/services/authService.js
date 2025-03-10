@@ -46,12 +46,9 @@ const handleRefreshToken = async ({ refreshToken }) => {
         headers: { "x-token": refreshToken },
       },
     );
-    console.log("a");
 
     return res.data;
   } catch (error) {
-    console.log("b");
-
     throw error;
   }
 };

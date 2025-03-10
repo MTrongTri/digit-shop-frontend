@@ -9,10 +9,9 @@ import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { FaStar } from "react-icons/fa6";
 import { HiOutlineMinusSmall, HiOutlinePlusSmall } from "react-icons/hi2";
-import { useDispatch } from "react-redux";
-import { useParams } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { Link, useParams } from "react-router-dom";
 import ModalPurchase from "./components/ModalPurchase";
-import ModalRating from "./components/ModalRating";
 import ReviewProductStar from "./components/ReviewProductStar";
 import ReviewCommentSection from "./components/ReviewCommentSection";
 import FormReview from "./components/FormReview";
@@ -26,9 +25,8 @@ function ProductDetailPage() {
     loading: true,
     error: false,
   });
-
+  const userState = useSelector((state) => state.user.userInfo);
   const dispatch = useDispatch();
-
   const { id: productId } = useParams();
 
   useEffect(() => {
@@ -53,6 +51,11 @@ function ProductDetailPage() {
   }, []);
 
   const handleAddToCart = async () => {
+    if (!userState) {
+      toast.error("Vui lòng đăng nhập để thực hiện thêm giỏ hàng.");
+      return;
+    }
+
     try {
       const { statusCode } = await addToCart({
         productId,
@@ -69,9 +72,17 @@ function ProductDetailPage() {
   };
 
   const handleBuyProduct = () => {
+    if (!userState) {
+      toast.error("Vui lòng đăng nhập để thực hiện mua hàng.");
+      return;
+    }
+
     setOpenModalPurchase(true);
     setProductDataBuy({
-      product: product.data,
+      productId: productId,
+      name: product.data?.name,
+      price: product.data?.price,
+      thumbnailUrl: product.data?.thumbnail.url,
       quantity: quantityBuy,
     });
   };
@@ -175,7 +186,18 @@ function ProductDetailPage() {
           <div className="mt-3 grid gap-10 md:grid-cols-3">
             <div className="order-2 md:order-1 md:col-span-2">
               <div>
-                <FormReview product={product.data} />
+                {userState ? (
+                  <FormReview product={product.data} />
+                ) : (
+                  <span className="mb-10 block">
+                    {
+                      <Link to="/login" className="font-semibold text-primary">
+                        Đăng nhập
+                      </Link>
+                    }{" "}
+                    để viết đánh giá.
+                  </span>
+                )}
               </div>
 
               <div id="comment-section">
@@ -194,7 +216,7 @@ function ProductDetailPage() {
       <ModalPurchase
         openModal={openModalPurchase}
         setOpenModal={setOpenModalPurchase}
-        productDatas={[productDataBuy]}
+        products={[productDataBuy]}
       />
     </Container>
   );
