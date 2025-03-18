@@ -1,13 +1,12 @@
-import { introspect } from "@/services/authService";
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
 import LoadingDotsFullScreen from "../Loading/LoadingDotsFullScreen";
+import useAuthorization from "@/hooks/useAuthorization";
 
 function PrivateAdminRoute({ children }) {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
   const userState = useSelector((state) => state.user.userInfo);
+  const { isAuthorized, isLoading } = useAuthorization("ADMIN");
 
   const location = useLocation();
   const navigate = useNavigate();
@@ -17,32 +16,14 @@ function PrivateAdminRoute({ children }) {
       navigate("/login", { state: { from: location }, replace: true });
       return;
     }
-
-    const fetchIntrospect = async () => {
-      try {
-        const { statusCode, data } = await introspect();
-
-        if (statusCode === 200 && data.roles.includes("ADMIN")) {
-          setIsAuthenticated(true);
-        }
-      } catch (error) {
-        if (!error.response) {
-          navigate("/server-error");
-        }
-      }
-
-      setIsLoading(false);
-    };
-
-    fetchIntrospect();
   }, [userState, navigate, location]);
 
   if (isLoading) {
     return <LoadingDotsFullScreen />;
   }
 
-  if (!isAuthenticated) {
-    return null;
+  if (!isAuthorized) {
+    navigate("/forbidden");
   }
 
   return children;

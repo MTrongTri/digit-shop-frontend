@@ -26,6 +26,8 @@ import CreateBrandPage from "./pages/Admin/Brand/CreateBrandPage";
 import UpdateBrandPage from "./pages/Admin/Brand/UpdateBrandPage";
 import ScrollTop from "./components/ScrollTop";
 import OrderStatusPage from "./pages/OrderPage/OrderStatusPage";
+import UserLayout from "./components/layouts/UserLayout/UserLayout";
+import PurchasedOrderPage from "./pages/UserPage/PurchasedOrderPage";
 
 function App() {
   return (
@@ -33,18 +35,22 @@ function App() {
       <Toaster />
       <LoadingCircleFullScreen />
       <BrowserRouter>
+        {/* Scroll top */}
         <ScrollTop />
+
+        {/* Auth layout */}
         <Routes>
           <Route element={<AuthLayout />}>
             <Route path="/login" element={<LoginPage />}></Route>
             <Route path="/register" element={<RegisterPage />}></Route>
           </Route>
 
-          <Route path="/" element={<MainLayout />}>
+          {/* Main layout */}
+          <Route element={<MainLayout />}>
             <Route index element={<HomePage />}></Route>
-            <Route path="products/:id" element={<ProductDetailPage />}></Route>
+            <Route path="/products/:id" element={<ProductDetailPage />}></Route>
             <Route
-              path="cart"
+              path="/cart"
               element={
                 <PrivateRoute>
                   <CartPage />
@@ -52,12 +58,10 @@ function App() {
               }
             ></Route>
 
-            <Route path="/orders">
-              <Route
-                path=":orderId/status"
-                element={<OrderStatusPage />}
-              ></Route>
-            </Route>
+            <Route
+              path="/orders/:orderId/status"
+              element={<OrderStatusPage />}
+            ></Route>
 
             <Route path="/forbidden" element={<ForbiddenPage />}></Route>
             <Route path="/server-error" element={<ServerErrorPage />}></Route>
@@ -101,6 +105,18 @@ function App() {
               path="brands/update/:id"
               element={<UpdateBrandPage />}
             ></Route>
+          </Route>
+
+          {/* User routes */}
+          <Route
+            path="/user"
+            element={
+              <PrivateRoute>
+                <UserLayout />
+              </PrivateRoute>
+            }
+          >
+            <Route path="orders" element={<PurchasedOrderPage />}></Route>
           </Route>
         </Routes>
       </BrowserRouter>

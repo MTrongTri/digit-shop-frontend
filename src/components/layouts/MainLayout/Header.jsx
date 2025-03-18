@@ -14,6 +14,7 @@ import { setUser } from "@/stores/userSlice";
 import { removeInfoLogout } from "@/utils/localStorage";
 import toast from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
+import { FaClipboardList } from "react-icons/fa";
 
 function Header() {
   const navigate = useNavigate();
@@ -78,15 +79,18 @@ function Header() {
                 </div>
                 <ul className="absolute -right-0 top-full z-10 hidden min-w-[200px] flex-col bg-white shadow-[rgba(17,_17,_26,_0.1)_0px_0px_16px] group-hover:flex">
                   <li className="px-3 py-2 hover:bg-gray-100">
-                    <Link to="/info" className="flex items-center gap-2">
+                    <Link
+                      to="/user/my-account"
+                      className="flex items-center gap-2"
+                    >
                       <FaUser className="text-[16px]" />
                       <span>Thông tin</span>
                     </Link>
                   </li>
                   <li className="px-3 py-2 hover:bg-gray-100">
-                    <Link to="/info" className="flex items-center gap-2">
-                      <IoSettingsSharp className="text-[16px]" />
-                      <span>Cài đặt</span>
+                    <Link to="/user/orders" className="flex items-center gap-2">
+                      <FaClipboardList className="text-[16px]" />
+                      <span>Đơn mua</span>
                     </Link>
                   </li>
                   <li className="px-3 py-2 hover:bg-gray-100">
@@ -96,15 +100,6 @@ function Header() {
                     >
                       <IoLogOut className="text-[16px]" />
                       <span>Đăng xuất</span>
-                    </button>
-                  </li>
-                  <li className="px-3 py-2 hover:bg-gray-100">
-                    <button
-                      className="flex w-full items-center gap-2"
-                      onClick={() => getAllUser()}
-                    >
-                      <IoLogOut className="text-[16px]" />
-                      <span>User</span>
                     </button>
                   </li>
                 </ul>
