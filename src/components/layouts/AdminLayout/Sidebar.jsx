@@ -34,7 +34,7 @@ function Sidebar() {
   const path = useLocation();
 
   return (
-    <div className="h-screen w-1/5 bg-white p-8">
+    <div className="h-full bg-white p-8">
       <div>
         <div className="flex font-roboto text-2xl font-bold">
           <h2>Digit Shop</h2>

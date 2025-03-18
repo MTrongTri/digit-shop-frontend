@@ -6,7 +6,9 @@ function AdminLayout() {
   return (
     <>
       <div className="flex">
-        <Sidebar />
+        <div className="min-h-max flex-shrink-0">
+          <Sidebar />
+        </div>
         <div className="flex-1 px-8 py-6">
           <Header />
           <div className="mt-10">

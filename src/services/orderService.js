@@ -29,4 +29,28 @@ const updateStatus = async (id, status) => {
   }
 };
 
-export { createOrder, getOrderByUserFilter, updateStatus };
+const getMonthlyRevenueByYear = async (year) => {
+  try {
+    const res = await httpClient.get(`/orders/monthly-revenue/${year}`);
+    return res.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+const getMonthlyOrderStatsByYear = async (year) => {
+  try {
+    const res = await httpClient.get(`/orders/monthly-stats/${year}`);
+    return res.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export {
+  createOrder,
+  getOrderByUserFilter,
+  updateStatus,
+  getMonthlyRevenueByYear,
+  getMonthlyOrderStatsByYear,
+};
