@@ -1,5 +1,5 @@
 import { FaCircle } from "react-icons/fa6";
-import { FaHome } from "react-icons/fa";
+import { FaBoxOpen, FaHome } from "react-icons/fa";
 import { AiFillProduct } from "react-icons/ai";
 import { MdCategory } from "react-icons/md";
 
@@ -28,6 +28,12 @@ const MENU_ITEMS = [
     to: "/admin/brands",
     icon: <TbBrandAppleFilled />,
   },
+
+  {
+    name: "Đơn hàng",
+    to: "/admin/orders",
+    icon: <FaBoxOpen />,
+  },
 ];
 
 function Sidebar() {
@@ -48,7 +54,7 @@ function Sidebar() {
 
         <div className="mt-8">
           <ul>
-            {MENU_ITEMS.map((item) => (
+            {MENU_ITEMS.map((item, index) => (
               <li
                 className={clsx(
                   "rounded-md duration-300 hover:bg-[#00B074]/20 hover:text-[#00B074]",
@@ -59,7 +65,7 @@ function Sidebar() {
                         item.to === "/admin/dashboard"),
                   },
                 )}
-                key={item.name}
+                key={index}
               >
                 <Link
                   to={`${item.to}`}

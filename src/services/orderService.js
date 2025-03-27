@@ -18,6 +18,15 @@ const getOrderByUserFilter = async (userId, params) => {
   }
 };
 
+const getOrderAdminWithFilter = async (params) => {
+  try {
+    const res = await httpClient.get(`/orders`, { params });
+    return res.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
 const updateStatus = async (id, status) => {
   try {
     const res = await httpClient.put(`/orders/status/${id}`, {
@@ -50,6 +59,7 @@ const getMonthlyOrderStatsByYear = async (year) => {
 export {
   createOrder,
   getOrderByUserFilter,
+  getOrderAdminWithFilter,
   updateStatus,
   getMonthlyRevenueByYear,
   getMonthlyOrderStatsByYear,

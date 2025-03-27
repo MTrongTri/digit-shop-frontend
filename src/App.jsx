@@ -28,6 +28,7 @@ import ScrollTop from "./components/ScrollTop";
 import OrderStatusPage from "./pages/OrderPage/OrderStatusPage";
 import UserLayout from "./components/layouts/UserLayout/UserLayout";
 import PurchasedOrderPage from "./pages/UserPage/PurchasedOrderPage";
+import OrderPage from "./pages/Admin/Order/OrderPage";
 
 function App() {
   return (
@@ -105,6 +106,8 @@ function App() {
               path="brands/update/:id"
               element={<UpdateBrandPage />}
             ></Route>
+
+            <Route path="orders" element={<OrderPage />}></Route>
           </Route>
 
           {/* User routes */}
