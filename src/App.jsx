@@ -10,7 +10,6 @@ import PrivateRoute from "@/components/Routes/PrivateRoute";
 import AuthLayout from "@/components/layouts/AuthLayout/AuthLayout";
 import { Toaster } from "react-hot-toast";
 import AdminLayout from "@/components/layouts/AdminLayout/AdminLayout";
-import AdminDashboard from "@/pages/Admin/AdminDashboard";
 import CategoriesPage from "@/pages/Admin/Category/CategoriesPage";
 import CreateCategoryPage from "@/pages/Admin/Category/CreateCategoryPage";
 import PrivateAdminRoute from "./components/Routes/PrivateAdminRoute";
@@ -29,6 +28,8 @@ import OrderStatusPage from "./pages/OrderPage/OrderStatusPage";
 import UserLayout from "./components/layouts/UserLayout/UserLayout";
 import PurchasedOrderPage from "./pages/UserPage/PurchasedOrderPage";
 import OrderPage from "./pages/Admin/Order/OrderPage";
+import UpdateOrderPage from "./pages/Admin/Order/UpdateOrderPage";
+import AdminDashboard from "./pages/Admin/Dashboard/AdminDashboard";
 
 function App() {
   return (
@@ -108,6 +109,10 @@ function App() {
             ></Route>
 
             <Route path="orders" element={<OrderPage />}></Route>
+            <Route
+              path="orders/update/:orderId"
+              element={<UpdateOrderPage />}
+            ></Route>
           </Route>
 
           {/* User routes */}
