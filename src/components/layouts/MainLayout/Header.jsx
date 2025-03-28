@@ -38,7 +38,7 @@ function Header() {
   };
 
   return (
-    <header className="h-auto w-full bg-[#fff] py-2 font-roboto md:h-header">
+    <header className="h-fit w-full bg-[#fff] py-2 font-roboto">
       <Container>
         <div className="flex items-center justify-between px-4">
           <div>
@@ -108,7 +108,7 @@ function Header() {
           </div>
         </div>
         {/* Navbar */}
-        <NavBar />
+        {/* <NavBar /> */}
       </Container>
     </header>
   );

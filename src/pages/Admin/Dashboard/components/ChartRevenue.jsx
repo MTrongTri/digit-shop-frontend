@@ -62,7 +62,7 @@ function ChartRevenue() {
   if (revenue.isLoading || revenue.hasError) return null;
 
   return (
-    <div className="h-full">
+    <div className="h-full px-4">
       <div className="flex items-center justify-between border-b-2 border-gray-200 p-4 pt-0">
         <div>
           <span className="font-semibold">Revenue</span>
