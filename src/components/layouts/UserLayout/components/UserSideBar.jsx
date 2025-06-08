@@ -33,14 +33,17 @@ function UserSideBar() {
 
       {/* items */}
       <div className="mt-6">
-        <ul>
+        <ul className="flex flex-col gap-1">
           <li
             className={clsx(
               "group rounded-md px-2 py-3 hover:bg-primary/20",
               pathname === "/user/my-account" && "bg-primary/20 text-primary",
             )}
           >
-            <Link className="flex items-center gap-1 group-hover:text-primary">
+            <Link
+              to="/user/my-account"
+              className="flex items-center gap-1 group-hover:text-primary"
+            >
               <FaBell className="text-[24px]" />
               Tài khoản của tôi
             </Link>
@@ -62,7 +65,10 @@ function UserSideBar() {
               pathname === "/user/orders" && "bg-primary/20 text-primary",
             )}
           >
-            <Link className="flex items-center gap-1 group-hover:text-primary">
+            <Link
+              to="/user/orders"
+              className="flex items-center gap-1 group-hover:text-primary"
+            >
               <FaClipboardList className="text-[24px]" />
               Đơn mua
             </Link>

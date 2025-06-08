@@ -10,7 +10,7 @@ function PopupItem({ Id, thumbnail, name }) {
           />
         </div>
         <div>
-          <span>{name}</span>
+          <span className="hover:text-primary">{name}</span>
         </div>
       </a>
     </div>

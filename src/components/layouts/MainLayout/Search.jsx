@@ -48,7 +48,7 @@ function Search() {
           onChange={(e) => setKeySearch(e.target.value)}
           className="w-[280px] rounded-full border border-[#DDDDE3] px-4 py-2 pr-12 font-roboto text-sm outline-none focus:border-primary md:w-[400px]"
           type="text"
-          placeholder="Tìm kiếm"
+          placeholder="Nhập tên sản phẩm"
         />
         <button
           type="submit"
