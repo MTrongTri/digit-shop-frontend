@@ -36,7 +36,7 @@ httpClient.interceptors.response.use(
       return Promise.reject(error);
     }
 
-    const errorCode = error.response?.data?.code;
+    const errorCode = error.response?.data?.errorCode;
     if (errorCode !== 2004 || originalRequest._retry) {
       return Promise.reject(error);
     }

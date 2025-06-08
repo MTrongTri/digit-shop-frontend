@@ -7,7 +7,7 @@ function Footer() {
   return (
     <footer className="mt-8 border-t-2 border-gray-200 bg-white">
       <Container>
-        <div className="grid grid-cols-2 gap-2 py-6 md:grid-cols-4">
+        <div className="grid grid-cols-2 gap-2 px-4 py-6 md:grid-cols-4">
           <div>
             <h3 className="font-semibold">Hỗ trợ khách hàng</h3>
             <ul className="mt-2 flex flex-col gap-2">

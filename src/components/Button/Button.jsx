@@ -2,7 +2,16 @@
 import clsx from "clsx";
 import { Link } from "react-router-dom";
 
-function Button({ type, to, link, onClick, className, children, ...props }) {
+function Button({
+  type,
+  to,
+  link,
+  disabled = false,
+  onClick,
+  className,
+  children,
+  ...props
+}) {
   const classes = clsx(
     className,
     "float-end rounded-md bg-primary px-6 py-2 text-white",
@@ -25,7 +34,13 @@ function Button({ type, to, link, onClick, className, children, ...props }) {
   }
 
   return (
-    <button type={type} onClick={onClick} {...props} className={classes}>
+    <button
+      disabled={disabled}
+      type={type}
+      onClick={onClick}
+      {...props}
+      className={classes}
+    >
       {children}
     </button>
   );

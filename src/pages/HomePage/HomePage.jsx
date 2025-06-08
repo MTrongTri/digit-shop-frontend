@@ -8,28 +8,40 @@ import ProductContainer from "@/components/Product/ProductContainer";
 import ProductCardSkeleton from "@/components/Skeleton/ProductCardSkeleton";
 import HomeSlider from "@/components/Slider/HomeSlider";
 import { getProductPaginate } from "@/services/productService";
+import { useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
 
 function HomePage() {
   const [currentPage, setCurrentPage] = useState(0);
   const [productData, setProductData] = useState({
     products: [],
-    totalPage: 0,
+    totalPage: 1,
     loading: false,
   });
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchProductsData = async () => {
       setProductData((prevState) => ({ ...prevState, loading: true }));
-      const { data, statusCode } = await getProductPaginate({
-        currentPage,
-      });
+      try {
+        const { data } = await getProductPaginate({
+          currentPage,
+        });
 
-      if (statusCode === 200) {
         setProductData({
           products: data.items,
           totalPage: data.totalPage,
           loading: false,
         });
+      } catch (error) {
+        if (
+          (error.request && !error.response) ||
+          error.response?.status === 500
+        ) {
+          navigate("/server-error");
+        } else {
+          toast.error("Đã có lỗi xảy ra, vui lòng thử lại");
+        }
       }
     };
 
@@ -55,7 +67,7 @@ function HomePage() {
         ) : (
           <ProductContainer>
             {productData.products.map((item) => (
-              <ProductCard key={item.id} data={item} />
+              <ProductCard key={item.Id} data={item} />
             ))}
           </ProductContainer>
         )}

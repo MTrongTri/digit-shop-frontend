@@ -33,12 +33,8 @@ function LoginPage() {
 
     setErrorMessage("");
     setLoading(true);
-
-    const { statusCode, code, data } = await login({ email, password });
-
-    setLoading(false);
-
-    if (statusCode === 200) {
+    try {
+      const { data } = await login({ email, password });
       const { accessToken, refreshToken, user } = data;
       localStorage.setItem("accessToken", accessToken);
       localStorage.setItem("refreshToken", refreshToken);
@@ -49,7 +45,7 @@ function LoginPage() {
       let redirectTo = "/";
       const { roles } = user;
       if (roles.includes("ADMIN")) {
-        redirectTo = "/products/1";
+        redirectTo = "/admin/dashboard";
       }
 
       if (location.state?.from?.pathname) {
@@ -58,10 +54,15 @@ function LoginPage() {
 
       navigate(redirectTo, { replace: true });
       toast.success("Đăng nhập thành công");
-    } else if (code === 2000) {
-      setErrorMessage("Email hoặc mật khẩu không đúng");
-    } else {
-      toast.error("Có lỗi xảy ra, vui lòng thử lại");
+    } catch (error) {
+      const errorCode = error.response?.data.errorCode;
+      if (errorCode === 2000) {
+        setErrorMessage("Email hoặc mật khẩu không đúng");
+      } else {
+        toast.error("Có lỗi xảy ra, vui lòng thử lại");
+      }
+    } finally {
+      setLoading(false);
     }
   };
 

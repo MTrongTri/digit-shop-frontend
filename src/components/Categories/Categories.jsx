@@ -13,12 +13,23 @@ function Categories() {
   useEffect(() => {
     const fetchCateData = async () => {
       setCategoriesData((prevState) => ({ ...prevState, loading: true }));
-      const { data, statusCode } = await getAllCategory();
-      if (statusCode === 200) {
+      try {
+        const { data } = await getAllCategory();
         setCategoriesData({
           categories: data,
           loading: false,
         });
+      } catch (error) {
+        if (
+          (error.request && !error.response) ||
+          error.response?.status === 500
+        ) {
+          navigate("/server-error");
+        } else {
+          toast.error("Đã có lỗi xảy ra, vui lòng thử lại");
+        }
+      } finally {
+        setCategoriesData((prevState) => ({ ...prevState, loading: false }));
       }
     };
 
@@ -43,7 +54,7 @@ function Categories() {
               <Link to="/">
                 <div>
                   <img
-                    className="aspect-square w-full object-cover p-3"
+                    className="aspect-square w-full object-contain p-3"
                     src={item.imgUrl}
                     alt="img category"
                   />

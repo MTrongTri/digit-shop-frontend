@@ -5,11 +5,16 @@ const getAllCategory = async () => {
     const res = await httpClient.get("/categories");
     return res.data;
   } catch (error) {
-    if (error.response) {
-      return error.response?.data;
-    }
+    throw error;
+  }
+};
 
-    return error;
+const getCategoryById = async (id) => {
+  try {
+    const res = await httpClient.get(`/categories/${id}`);
+    return res.data;
+  } catch (error) {
+    throw error;
   }
 };
 
@@ -20,12 +25,34 @@ const getCategoriesPage = async (pageNo = 0, pageSize = 12) => {
     );
     return res.data;
   } catch (error) {
-    if (error.response) {
-      return error.response?.data;
-    }
-
-    return error;
+    throw error;
   }
 };
 
-export { getAllCategory, getCategoriesPage };
+const createCategory = async (data) => {
+  try {
+    const res = await httpClient.post("/categories", data);
+
+    return res.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+const updateCategory = async ({ id, data }) => {
+  try {
+    const res = await httpClient.put(`/categories/${id}`, data);
+
+    return res.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export {
+  getAllCategory,
+  getCategoryById,
+  getCategoriesPage,
+  createCategory,
+  updateCategory,
+};

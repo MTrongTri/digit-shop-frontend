@@ -5,19 +5,48 @@ import clsx from "clsx";
 import ErrorMessage from "@/components/Error/ErrorMessage";
 import Button from "@/components/Button/Button";
 import ImgUpload from "@/components/Input/ImgUpload";
+import { createCategory } from "@/services/categoryService";
+import toast from "react-hot-toast";
+import { useState } from "react";
+import ModalConfirm from "@/components/Modal/ModalConfirm";
+import { useDispatch } from "react-redux";
+import { hideLoading, showLoading } from "@/stores/loadingSlice";
 
 function CreateCategoryPage() {
+  const [isUploading, setIsUploading] = useState(false);
+  const [isOpenModal, setIsOpenModal] = useState(false);
+  const [resetPreviewImg, setResetPreviewImg] = useState(false);
+  const [cateData, setCateData] = useState(null);
+  const dispatch = useDispatch();
+
   const {
     control,
     handleSubmit,
+    reset,
     formState: { errors },
   } = useForm({
     mode: "onSubmit",
     reValidateMode: "onSubmit",
   });
 
-  const onSubmit = (formData) => {
-    console.log(formData);
+  const onSubmit = async (formData) => {
+    setIsOpenModal(true);
+    setCateData(formData);
+  };
+
+  const handleConfirm = async () => {
+    dispatch(showLoading());
+    setIsOpenModal(false);
+    try {
+      await createCategory(cateData);
+      reset();
+      setResetPreviewImg(true);
+      toast.success("Tạo danh mục sản phẩm thành công");
+    } catch (error) {
+      toast.error("Đã có lỗi xảy ra, vui lòng thử lại");
+    } finally {
+      dispatch(hideLoading());
+    }
   };
 
   return (
@@ -46,14 +75,16 @@ function CreateCategoryPage() {
           <div>
             <FloatingLabelInput
               label="Mô tả"
-              name="desc"
+              name="description"
               type="text"
-              id="cate-desc"
+              id="cate-description"
               control={control}
               rules={{ required: "Mô tả không được bỏ trống" }}
-              className={clsx(errors.desc && "border-red-500")}
+              className={clsx(errors.description && "border-red-500")}
             />
-            {errors.desc && <ErrorMessage message={errors.desc.message} />}
+            {errors.description && (
+              <ErrorMessage message={errors.description.message} />
+            )}
           </div>
 
           <div className="flex gap-6">
@@ -62,9 +93,12 @@ function CreateCategoryPage() {
               <div className="mt-2 aspect-square w-[200px]">
                 <ImgUpload
                   id="img"
-                  name="img"
+                  name="imgId"
                   control={control}
                   rules={{ required: "Vui lòng chọn 1 ảnh" }}
+                  setIsUploading={setIsUploading}
+                  resetPreviewImg={resetPreviewImg}
+                  setResetPreviewImg={setResetPreviewImg}
                   className={clsx(errors.img && "border-red-500")}
                   accept="image/png, image/jpg, image/jpeg"
                 />
@@ -77,9 +111,12 @@ function CreateCategoryPage() {
               <div className="mt-2 aspect-square w-[200px]">
                 <ImgUpload
                   id="icon"
-                  name="icon"
+                  name="iconId"
                   control={control}
                   rules={{ required: "Vui lòng chọn 1 ảnh" }}
+                  setIsUploading={setIsUploading}
+                  resetPreviewImg={resetPreviewImg}
+                  setResetPreviewImg={setResetPreviewImg}
                   className={clsx(errors.icon && "border-red-500")}
                   accept="image/png, image/jpg, image/jpeg"
                 />
@@ -89,10 +126,21 @@ function CreateCategoryPage() {
           </div>
 
           <div>
-            <Button type="submit">Thêm</Button>
+            <Button type="submit" disabled={isUploading}>
+              Thêm
+            </Button>
           </div>
         </form>
       </div>
+
+      {/* Modal */}
+      <ModalConfirm
+        heading="Xác nhận thêm danh mục sản phẩm"
+        message="Bạn có chắn là muốn thêm 1 danh mục sản phẩm không?"
+        isShow={isOpenModal}
+        setIsShow={setIsOpenModal}
+        onConfirm={handleConfirm}
+      />
     </div>
   );
 }

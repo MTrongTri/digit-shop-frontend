@@ -1,9 +1,11 @@
 import { FaCircle } from "react-icons/fa6";
-import { FaHome } from "react-icons/fa";
+import { FaBoxOpen, FaHome } from "react-icons/fa";
 import { AiFillProduct } from "react-icons/ai";
 import { MdCategory } from "react-icons/md";
 
 import { Link, useLocation } from "react-router-dom";
+import clsx from "clsx";
+import { TbBrandAppleFilled } from "react-icons/tb";
 
 const MENU_ITEMS = [
   {
@@ -21,13 +23,24 @@ const MENU_ITEMS = [
     to: "/admin/categories",
     icon: <MdCategory />,
   },
+  {
+    name: "Thương hiệu",
+    to: "/admin/brands",
+    icon: <TbBrandAppleFilled />,
+  },
+
+  {
+    name: "Đơn hàng",
+    to: "/admin/orders",
+    icon: <FaBoxOpen />,
+  },
 ];
 
 function Sidebar() {
   const path = useLocation();
 
   return (
-    <div className="h-screen w-1/5 bg-white p-8">
+    <div className="h-full bg-white p-8">
       <div>
         <div className="flex font-roboto text-2xl font-bold">
           <h2>Digit Shop</h2>
@@ -41,10 +54,18 @@ function Sidebar() {
 
         <div className="mt-8">
           <ul>
-            {MENU_ITEMS.map((item) => (
+            {MENU_ITEMS.map((item, index) => (
               <li
-                className={`rounded-md duration-300 hover:bg-[#00B074]/20 hover:text-[#00B074] ${item.to === path.pathname ? "bg-[#00B074]/20 font-semibold text-[#00B074]" : ""}`}
-                key={item.name}
+                className={clsx(
+                  "rounded-md duration-300 hover:bg-[#00B074]/20 hover:text-[#00B074]",
+                  {
+                    "bg-[#00B074]/20 font-semibold text-[#00B074]":
+                      item.to === path.pathname ||
+                      (path.pathname === "/admin" &&
+                        item.to === "/admin/dashboard"),
+                  },
+                )}
+                key={index}
               >
                 <Link
                   to={`${item.to}`}

@@ -8,10 +8,14 @@ function ProductCard({ data }) {
     <div className="h-[360px] duration-300 hover:shadow-[rgba(0,_0,_0,_0.24)_0px_0px_4px]">
       <Link
         className="block h-full rounded-[4px] border border-gray-200"
-        to={`/products/${data.id}`}
+        to={`/products/${data.Id}`}
       >
-        <div className="mt-3 aspect-square w-full p-1">
-          <img className="duration-300 hover:-mt-2" src={data.imgUrl} alt="" />
+        <div className="mt-3 flex aspect-square w-full items-center p-1">
+          <img
+            className="duration-300 hover:-mt-2"
+            src={data.thumbnailUrl}
+            alt=""
+          />
         </div>
 
         <div className="flex flex-col gap-2 p-2">
@@ -27,7 +31,9 @@ function ProductCard({ data }) {
           </div>
           <div className="flex items-center gap-2 text-sm">
             <FaStar className="text-[#ffc400]" />
-            <span>4 (100)</span>
+            <span>
+              {Math.round(data.averageRating * 10) / 10} ({data.totalReview})
+            </span>
           </div>
         </div>
       </Link>

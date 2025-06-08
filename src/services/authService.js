@@ -5,11 +5,7 @@ const login = async ({ email, password }) => {
     const res = await httpClient.post("/auth/login", { email, password });
     return res.data;
   } catch (error) {
-    if (error.response) {
-      return error.response?.data;
-    }
-
-    return error;
+    throw error;
   }
 };
 
@@ -18,17 +14,10 @@ const signup = async ({ email, password }) => {
     const res = await httpClient.post("/auth/register", { email, password });
     return res.data;
   } catch (error) {
-    if (error.response) {
-      return error.response?.data;
-    }
-
-    return error;
+    throw error;
   }
 };
 
-<<<<<<< HEAD
-export { login, signup };
-=======
 const logout = async ({ accessToken, refreshToken }) => {
   try {
     const res = await httpClient.post(
@@ -44,11 +33,7 @@ const logout = async ({ accessToken, refreshToken }) => {
 
     return res.data;
   } catch (error) {
-    if (error.response) {
-      return error.response?.data;
-    }
-
-    return error;
+    throw error;
   }
 };
 
@@ -64,13 +49,26 @@ const handleRefreshToken = async ({ refreshToken }) => {
 
     return res.data;
   } catch (error) {
-    if (error.response) {
-      return error.response?.data;
-    }
-
-    return error;
+    throw error;
   }
 };
 
-export { login, signup, logout, handleRefreshToken };
->>>>>>> dev
+const introspect = async () => {
+  try {
+    const token = localStorage.getItem("accessToken");
+
+    const res = await httpClient.post(
+      "/auth/introspect",
+      {},
+      {
+        headers: { token: token },
+      },
+    );
+
+    return res.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export { login, signup, logout, handleRefreshToken, introspect };
